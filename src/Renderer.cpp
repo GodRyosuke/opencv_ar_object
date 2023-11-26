@@ -100,6 +100,12 @@ Renderer::~Renderer()
     glfwTerminate();
 }
 
+void Renderer::Update()
+{
+    // window sizeを取得
+    glfwGetWindowSize(m_GLFWWindow, &m_ScreenWidth, &m_ScreenHeight);
+}
+
 void Renderer::Draw()
 {
     glClearColor(0.f, 0.5f, 0.7f, 1.0f);

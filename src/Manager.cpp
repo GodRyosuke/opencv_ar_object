@@ -39,6 +39,7 @@ bool Manager::Init()
 
 void Manager::Update()
 {
+    m_Renderer->Update();
     if (m_Renderer->IsCloseWindow()) {
         m_IsRun = false;
     }

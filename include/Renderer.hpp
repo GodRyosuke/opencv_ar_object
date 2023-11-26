@@ -11,6 +11,7 @@ public:
     Renderer();
     ~Renderer();
     bool Init();
+    void Update();
     void Draw();
     bool IsCloseWindow() { return glfwWindowShouldClose(m_GLFWWindow); }
     void SetKeyCallback(std::function<void(GLFWwindow*, int, int, int, int)> callback)
