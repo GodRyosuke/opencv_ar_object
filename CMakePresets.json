@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "wander_ge_presets",
+            "toolchainFile": "dependencies/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        }
+    ]
+}
