@@ -54,7 +54,7 @@ find_package(assimp CONFIG REQUIRED)
 add_library(glad src/glad.c)
 target_include_directories(glad PUBLIC ${PROJECT_SOURCE_DIR}/include)
 # glm
-set (GLM_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/dependencies/glm)
+# set (GLM_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/dependencies/glm)
 
 # cmake configurations
 set (BUILD_PATH "${PROJECT_SOURCE_DIR}/build")
