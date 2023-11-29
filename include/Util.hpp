@@ -1,8 +1,16 @@
 #pragma once
 
-#include <cassert>
+#include <utility>
+#include <iostream>
 
 namespace Util {
-void Print(const char* str);
-void RelasePrint(const char* str);
+void Print() {}
+template <class Head, class... Tail>
+void Print(Head&& arg1, Tail&&... arg_end)
+{
+#ifndef NDEBUG
+    std::cout << arg1;
+    Print(std::forward<Tail>(arg_end)...);
+#endif
+}
 }

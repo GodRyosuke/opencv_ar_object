@@ -60,7 +60,13 @@ target_include_directories(glad PUBLIC ${PROJECT_SOURCE_DIR}/include)
 set (BUILD_PATH "${PROJECT_SOURCE_DIR}/build")
 set (ASSET_PATH "${PROJECT_SOURCE_DIR}/assets/")
 set (SHADER_PATH "${PROJECT_SOURCE_DIR}/shaders/")
+set (PLATFORM_TYPE ${CEF_PLATFORM})
 set (PROJECT_BUILD_TYPE ${CMAKE_BUILD_TYPE})
+# string(REGEX MATCH "(?i)debug(?-i)" IS_DEBUG ${CMAKE_BUILD_TYPE})
+# if ((NOT MSVC) AND (${CMAKE_BUILD_TYPE} MATCHES "debug"))
+# if ((NOT MSVC) AND (DFINED ${IS_DEBUG}))
+#     set (_DEBUG 1)
+# endif()
 configure_file(
     ${PROJECT_SOURCE_DIR}/include/Definitions.hpp.in 
     ${PROJECT_SOURCE_DIR}/include/Definitions.hpp

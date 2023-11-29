@@ -5,6 +5,7 @@
 
 #include "Renderer.hpp"
 #include "Actor/Actor.hpp"
+#include "Util.hpp"
 #include <cassert>
 
 Manager::Manager()
