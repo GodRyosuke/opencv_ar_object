@@ -1,6 +1,8 @@
 set (PROJECT_SRC
     Manager.cpp
     Renderer.cpp
+    Actor/Actor.cpp
+    Component/Component.cpp
 )
 add_library(main_lib ${PROJECT_SRC})
 target_include_directories(main_lib PUBLIC
@@ -8,6 +10,7 @@ target_include_directories(main_lib PUBLIC
     ${OpenCV_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/include
     ${ASSIMP_INCLUDE_DIRS}
+    ${GLM_INCLUDE_DIR}
 )
 target_link_libraries(main_lib
     ${glfw3_LIBRARIES}

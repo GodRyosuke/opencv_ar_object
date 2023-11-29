@@ -1,3 +1,5 @@
 #define ASSET_PATH "@ASSET_PATH@"
 #define SHADER_PATH "@SHADER_PATH@"
 #define BUILD_PATH "@BUILD_PATH@"
+#define PROJECT_BUILD_TYPE "@PROJECT_BUILD_TYPE@"
+// #cmakedefine BUILD_TYPE

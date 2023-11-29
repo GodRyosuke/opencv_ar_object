@@ -1,8 +1,11 @@
 #include "Manager.hpp"
 
 #include <iostream>
+#include <algorithm>
 
 #include "Renderer.hpp"
+#include "Actor/Actor.hpp"
+#include <cassert>
 
 Manager::Manager()
     :m_Renderer(new Renderer())
@@ -53,5 +56,19 @@ void Manager::Run()
         m_Renderer->Draw();
         glfwPollEvents();
     }
-    
+}
+
+void Manager::AddActor(Actor* actor)
+{
+    m_Actors.emplace(actor->m_Name.c_str(), actor);
+}
+
+void Manager::RemoveActor(std::string name)
+{
+    auto iter = m_Actors.find(name);
+    if (iter == m_Actors.end()) {
+        printf("error: failed to remove actor: %s\n", name.c_str());
+        return;
+    }
+    m_Actors.erase(name);
 }
