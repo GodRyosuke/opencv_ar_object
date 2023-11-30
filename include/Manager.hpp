@@ -11,11 +11,11 @@ public:
     void AddActor(class Actor* actor);
     void RemoveActor(std::string name);
 
+    class Renderer* m_Renderer;
 private:
     bool Init();
     void Update();
 
-    class Renderer* m_Renderer;
     bool m_IsRun;
     std::unordered_map<std::string, class Actor*> m_Actors;
 
