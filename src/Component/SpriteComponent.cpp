@@ -20,6 +20,7 @@ SpriteComponent::SpriteComponent(Actor* owner, Texture* tex)
         },
         Shader::ShaderDesc::VERTEX_FRAGMENT
     })
+    ,m_DisableDrawing(false)
 {
    	std::vector<glm::vec3> vertices = {
 		glm::vec3(-0.5f, 0.5f, 0.f), // top left
@@ -48,6 +49,10 @@ SpriteComponent::~SpriteComponent()
 
 void SpriteComponent::Draw()
 {
+    if (m_DisableDrawing) {
+        return;
+    }
+    
 	float screenWidth = m_Owner->GetManager()->m_Renderer->GetScreenSize().x;
 	float screenHeight = m_Owner->GetManager()->m_Renderer->GetScreenSize().y;
 	glm::mat4 spriteViewProj = glm::mat4({

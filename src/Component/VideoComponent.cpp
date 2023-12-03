@@ -49,9 +49,9 @@ VideoComponent::~VideoComponent()
 
 void VideoComponent::Update()
 {
-    cv::Mat frame; //取得したフレーム
-    m_Video.read(frame);
-    m_Texture->Update(frame);   // 取得したフレームに合わせてtextureを更新
+    // 最新のフレームを取得
+    m_Video.read(m_CurrentFrame);
+    m_Texture->Update(m_CurrentFrame);   // 取得したフレームに合わせてtextureを更新
 }
 
 // void VideoComponent::Draw()

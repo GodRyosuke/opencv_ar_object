@@ -13,6 +13,7 @@ public:
     VideoComponent(class Actor* owner);
     void Update() override;
     ~VideoComponent();
+    cv::Mat GetCurrentFrame() const { return m_CurrentFrame; }
     // void SetTexture(class Texture* tex) { mTexture = tex; }
     // void Draw();
     // const Texture* GetTexture() { return m_Texture; }
@@ -25,6 +26,7 @@ private:
     // GLenum mTextureUnit;
     // const Shader::ShaderDesc m_ShaderDesc;
     cv::VideoCapture m_Video;
+    cv::Mat m_CurrentFrame;
 
     // glm::mat4 mSpriteViewProj;
 };

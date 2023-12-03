@@ -14,6 +14,7 @@ public:
     void Draw();
 
     const class Texture* GetTexture() { return m_Texture; };
+    bool m_DisableDrawing;
 
 protected:
     float* mSpriteVertices;

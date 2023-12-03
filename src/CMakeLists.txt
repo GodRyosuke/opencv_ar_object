@@ -8,6 +8,7 @@ set (PROJECT_SRC
     Actor/Actor.cpp
     Actor/TestSprite.cpp
     Actor/Capture.cpp
+    Actor/ARMarker.cpp
     Component/Component.cpp
     Component/SpriteComponent.cpp
     Component/VideoComponent.cpp

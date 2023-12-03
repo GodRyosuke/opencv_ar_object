@@ -12,6 +12,7 @@ Capture::Capture(Manager* manager)
     :Actor(manager, "Capture")
 {
     m_VideoComp = new VideoComponent(this);
+    m_VideoComp->m_DisableDrawing = true;   // 動画の描画はしない
     
     double screenWidth = manager->m_Renderer->GetScreenSize().x;
     double screenHeight = manager->m_Renderer->GetScreenSize().y;
@@ -40,4 +41,8 @@ void Capture::UpdateActor()
     // texScale *= m_Manager->m_Renderer->GetScreenSize().x * m_imageRatio / tex->GetWidth();
     glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(texScale.x, texScale.y, 1.f));
     SetScale(scaleMat);
+}
+
+cv::Mat Capture::GetCurrentFrame() const {
+    return m_VideoComp->GetCurrentFrame();
 }

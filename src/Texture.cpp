@@ -43,8 +43,9 @@ void Texture::Update(cv::Mat img)
 	CreateGLTex(img);
 }
 
-void Texture::CreateGLTex(cv::Mat src_img)
+void Texture::CreateGLTex(cv::Mat src_img_data)
 {
+	cv::Mat src_img = src_img_data.clone();
 	cv::flip(src_img, src_img, 0);
 	cv::cvtColor(src_img, src_img, cv::COLOR_BGR2RGB);
 	int cv_type = src_img.type();

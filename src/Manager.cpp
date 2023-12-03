@@ -8,6 +8,7 @@
 #include "Actor/Actor.hpp"
 #include "Actor/TestSprite.hpp"
 #include "Actor/Capture.hpp"
+#include "Actor/ARMarker.hpp"
 
 Manager::Manager()
     :m_Renderer(new Renderer())
@@ -43,6 +44,7 @@ bool Manager::Init()
     Actor* a = nullptr;
     // a = new TestSprite(this);
     a = new Capture(this);
+    a = new ARMarker(this);
 
     return true;
 }
@@ -72,6 +74,16 @@ void Manager::Run()
 void Manager::AddActor(Actor* actor)
 {
     m_Actors.emplace(actor->m_Name.c_str(), actor);
+}
+
+const Actor* Manager::GetActor(std::string actorName)
+{
+    auto iter = m_Actors.find(actorName);
+    if (iter == m_Actors.end()) {
+        Util::Print("error: Actor ", actorName, " has not been added to manager\n");
+        return nullptr;
+    }
+    return iter->second;
 }
 
 void Manager::RemoveActor(std::string name)

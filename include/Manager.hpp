@@ -9,6 +9,7 @@ public:
     ~Manager();
     void Run();
     void AddActor(class Actor* actor);
+    const class Actor* GetActor(std::string actorName);
     void RemoveActor(std::string name);
 
     class Renderer* m_Renderer;
