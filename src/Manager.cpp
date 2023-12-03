@@ -4,9 +4,9 @@
 #include <algorithm>
 
 #include "Renderer.hpp"
-#include "Actor/Actor.hpp"
 #include "Util.hpp"
-#include <cassert>
+#include "Actor/Actor.hpp"
+#include "Actor/TestSprite.hpp"
 
 Manager::Manager()
     :m_Renderer(new Renderer())
@@ -38,6 +38,10 @@ bool Manager::Init()
         }
     });
 
+    // Load Actors
+    Actor* a = nullptr;
+    a = new TestSprite(this);
+
     return true;
 }
 
@@ -46,6 +50,9 @@ void Manager::Update()
     m_Renderer->Update();
     if (m_Renderer->IsCloseWindow()) {
         m_IsRun = false;
+    }
+    for (auto actor : m_Actors) {
+        actor.second->Update();
     }
 }
 

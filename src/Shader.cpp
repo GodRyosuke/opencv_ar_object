@@ -1,9 +1,13 @@
 #include "Shader.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+
+#include "Util.hpp"
 
 Shader::Shader()
 {
@@ -41,13 +45,13 @@ static bool CompileShader(std::string filepath, GLenum shaderType, GLuint& shade
 			char buffer[512];
 			memset(buffer, 0, 512);
 			glGetShaderInfoLog(shader, 511, nullptr, buffer);
-			printf("GLSL Compile Failed:\n%s", buffer);
+			Util::Print("GLSL Compile Failed: ", buffer, "\n");
 			return false;
 		}
 	}
 	else
 	{
-		printf("Shader file not found: %s\n", filepath.c_str());
+		Util::Print("Shader file not found: ", filepath.c_str(), "\n");
 		return false;
 	}
 	return true;
@@ -120,4 +124,19 @@ void Shader::SetFloatUniform(std::string uniformName, float data)
 void Shader::SetSamplerUniform(std::string uniformName, GLuint tex)
 {
 	glUniform1i(glGetUniformLocation(mShaderProgram, uniformName.c_str()), tex);
+}
+
+Shader* Shader::CompileShaderFromDesc(ShaderDesc desc)
+{
+	Shader* shader = new Shader();
+    // とりあえずvertex shader, fragment shaderの2のみ対応
+    if ((desc.m_FilePaths.size() != 2) && (desc.m_ShaderType == ShaderDesc::VERTEX_FRAGMENT)) {
+        Util::Print("warn: invalied number of shader files are tried to compile\n");
+		return nullptr;
+    }
+	if (!shader->CreateShaderProgram(desc.m_FilePaths[0], desc.m_FilePaths[1])) {
+        Util::Print("failed to compile shader: ", desc.m_FilePaths[0], " ", desc.m_FilePaths[1], "\n");
+		return nullptr;
+	}
+    return shader;
 }

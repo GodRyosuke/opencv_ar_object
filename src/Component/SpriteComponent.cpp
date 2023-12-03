@@ -6,10 +6,20 @@
 #include "VertexArray.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
+#include "Definitions.hpp"
 
-SpriteComponent::SpriteComponent(Actor* owner)
+SpriteComponent::SpriteComponent(Actor* owner, Texture* tex)
     :Component(owner)
-    ,mTextureUnit(GL_TEXTURE0)
+    // ,mTextureUnit(GL_TEXTURE0)
+    ,m_Texture(tex)
+    ,m_ShaderDesc({
+        "SpriteShader",
+        {
+        std::string(SHADER_PATH) + "sprite.vert",
+        std::string(SHADER_PATH) + "sprite.frag"
+        },
+        Shader::ShaderDesc::VERTEX_FRAGMENT
+    })
 {
    	std::vector<glm::vec3> vertices = {
 		glm::vec3(-0.5f, 0.5f, 0.f), // top left
@@ -47,7 +57,7 @@ void SpriteComponent::Draw()
         { 0.0f, 0.0f, 1.0f, 1.0f }
     });
 
-    Shader* shader = m_Owner->GetManager()->m_Renderer->GetShader("SpriteShader");
+    Shader* shader = m_Owner->GetManager()->m_Renderer->GetShader(m_ShaderDesc);
     shader->UseProgram();
 
     shader->SetMatrixUniform("ModelTransform", m_Owner->GetWorldTransform());
@@ -55,8 +65,8 @@ void SpriteComponent::Draw()
 
     // VertexArray* vao = mMesh->GetVertexArray();
     mVAO->SetActive();
-    mTexture->BindTexture(mTextureUnit);
+    m_Texture->BindTexture();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-    mTexture->UnBindTexture();
+    m_Texture->UnBindTexture();
 }
 

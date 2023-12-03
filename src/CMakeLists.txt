@@ -6,6 +6,8 @@ set (PROJECT_SRC
     Texture.cpp
     # Util.cpp
     Actor/Actor.cpp
+    Actor/TestSprite.cpp
+    Actor/Capture.cpp
     Component/Component.cpp
     Component/SpriteComponent.cpp
 )

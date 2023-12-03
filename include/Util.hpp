@@ -1,10 +1,9 @@
-// #pragma once
-#ifndef UTIL_H_
-#define UTIL_H_
+#pragma once
 
 #include <utility>
 #include <iostream>
 #include <cassert>
+#include "Shader.hpp"
 
 namespace Util {
 inline void Print() {}
@@ -16,6 +15,5 @@ inline void Print(Head&& arg1, Tail&&... arg_end)
     Print(std::forward<Tail>(arg_end)...);
 #endif
 }
-}
 
-#endif
+}

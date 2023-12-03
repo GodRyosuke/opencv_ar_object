@@ -2,9 +2,9 @@
 
 #include "Actor/Actor.hpp"
 
-class TestSprite : public Actor {
+class Capture : public Actor {
 public:
-    TestSprite(class Manager* manager);
+    Capture(class Manager* manager);
     void UpdateActor() override;
 
 private:

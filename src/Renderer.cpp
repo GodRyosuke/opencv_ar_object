@@ -4,6 +4,7 @@
 
 #include "Util.hpp"
 #include "Shader.hpp"
+#include "Component/SpriteComponent.hpp"
 
 Renderer::Renderer()
     :m_ScreenWidth(640)
@@ -17,7 +18,7 @@ bool Renderer::Init()
     if (!glfwInit())
     {
         // Initialization failed
-        printf("error: failed to initialize glfw\n");
+        Util::Print("error: failed to initialize glfw\n");
         return false;
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -26,7 +27,7 @@ bool Renderer::Init()
     m_GLFWWindow = glfwCreateWindow(m_ScreenWidth, m_ScreenHeight, "opencv_ar_object", NULL, NULL);
     if (!m_GLFWWindow)
     {
-        printf("error: failed to crate glfw window\n");
+        Util::Print("error: failed to crate glfw window\n");
         return false;
     }
     glfwMakeContextCurrent(m_GLFWWindow);
@@ -61,27 +62,41 @@ void Renderer::Draw()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	// Draw Sprites
+	glDisable(GL_DEPTH_TEST);
+	// Enable alpha blending on the color buffer
+	glEnable(GL_BLEND);
+	glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+
+	// mSpriteShader->UseProgram();
+	for (auto sprite : m_SpriteComps) {
+		sprite->Draw();
+	}
+
     glfwSwapBuffers(m_GLFWWindow);
 }
 
-void Renderer::AddShader(std::string name, Shader* shader)
+Shader* Renderer::GetShader(const Shader::ShaderDesc& shaderDesc)
 {
-    auto iter = m_Shaders.find(name);
-    if (iter != m_Shaders.end()) {
-        Util::Print("error: shader ", name, " is already added\n");
-        return;
-    }
-    m_Shaders.emplace(name, shader);
-}
-
-Shader* Renderer::GetShader(std::string name)
-{
-    auto iter = m_Shaders.find(name);
+    auto iter = m_Shaders.find(shaderDesc.m_Name);
     if (iter == m_Shaders.end()) {
-        Util::Print("error: failed to open shader: ", name, '\n');
-        return nullptr;
+        // まだ読み込まれていないので、コンパイルする
+        std::string fileNames = "";
+        for (auto fileName : shaderDesc.m_FilePaths) {
+            fileNames += fileName + " ";
+        }
+        Util::Print("Compile shader files: ", fileNames, "\n");
+        Shader* shader = Shader::CompileShaderFromDesc(shaderDesc);
+        if (!shader) {
+            Util::Print("failed to compile shader\n");
+            return nullptr;
+        }
+        m_Shaders.emplace(shaderDesc.m_Name, shader);
+        return shader;
     }
-    return m_Shaders[name];
+
+    return m_Shaders[shaderDesc.m_Name];
 }
 
 std::vector<std::function<void(GLFWwindow*, int, int, int, int)>> Renderer::m_KeyCallbacks;
@@ -91,4 +106,3 @@ void Renderer::MainKeyCallback(GLFWwindow* window, int key, int scancode, int ac
         callback(window,key, scancode, action, mods);
     }
 }
-
