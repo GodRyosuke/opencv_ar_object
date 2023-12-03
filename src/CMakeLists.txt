@@ -10,6 +10,7 @@ set (PROJECT_SRC
     Actor/Capture.cpp
     Component/Component.cpp
     Component/SpriteComponent.cpp
+    Component/VideoComponent.cpp
 )
 add_library(main_lib ${PROJECT_SRC})
 target_include_directories(main_lib PUBLIC

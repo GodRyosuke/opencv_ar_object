@@ -7,6 +7,7 @@
 #include "Util.hpp"
 #include "Actor/Actor.hpp"
 #include "Actor/TestSprite.hpp"
+#include "Actor/Capture.hpp"
 
 Manager::Manager()
     :m_Renderer(new Renderer())
@@ -40,7 +41,8 @@ bool Manager::Init()
 
     // Load Actors
     Actor* a = nullptr;
-    a = new TestSprite(this);
+    // a = new TestSprite(this);
+    a = new Capture(this);
 
     return true;
 }

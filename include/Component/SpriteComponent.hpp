@@ -13,13 +13,14 @@ public:
     // void SetTexture(class Texture* tex) { mTexture = tex; }
     void Draw();
 
-    const class Texture* m_Texture;
-    
-private:
+    const class Texture* GetTexture() { return m_Texture; };
+
+protected:
     float* mSpriteVertices;
     class VertexArray* mVAO;
     // GLenum mTextureUnit;
     const Shader::ShaderDesc m_ShaderDesc;
+    class Texture* m_Texture;
 
     // glm::mat4 mSpriteViewProj;
 };

@@ -7,11 +7,15 @@
 
 #include "Util.hpp"
 
+Texture::Texture(GLenum texUnit)
+	:m_TexUnit(texUnit)
+{
+}
 
 Texture::Texture(std::string filePath, GLenum texUnit)
 	:m_TexUnit(texUnit)
 {
-	if (!Load(filePath, texUnit)) {
+	if (!Load(filePath)) {
 		Util::Print("failed to load texture\n");
 	}
 }
@@ -25,23 +29,28 @@ Texture::Texture(GLuint textureData,  GLenum texUnit, int width, int height)
 {
 }
 
-bool Texture::Load(std::string filePath, GLenum textureUnit)
+bool Texture::Load(std::string filePath)
 {
-	// cv::Mat src_img;
-	m_Img = cv::imread(filePath, cv::IMREAD_COLOR);
-	cv::flip(m_Img, m_Img, 0);
-	cv::cvtColor(m_Img, m_Img, cv::COLOR_BGR2RGB);
-	// int numColCh;
-	// stbi_set_flip_vertically_on_load(true);
-	// unsigned char* pictureData = stbi_load(filePath.c_str(), &width, &height, &numColCh, 0);
+	cv::Mat src_img;
+	src_img = cv::imread(filePath, cv::IMREAD_COLOR);
+	CreateGLTex(src_img);
 
-	// if (!pictureData) {
-	// 	Util::Print("error: failed to load texture: ", filePath, "\n");
-	// 	return false;
-	// }
+	return true;
+}
+
+void Texture::Update(cv::Mat img)
+{
+	CreateGLTex(img);
+}
+
+void Texture::CreateGLTex(cv::Mat src_img)
+{
+	cv::flip(src_img, src_img, 0);
+	cv::cvtColor(src_img, src_img, cv::COLOR_BGR2RGB);
+	int cv_type = src_img.type();
 	
 	glGenTextures(1, &texture_data);
-	glActiveTexture(textureUnit);
+	glActiveTexture(m_TexUnit);
 	glBindTexture(GL_TEXTURE_2D, texture_data);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -49,29 +58,12 @@ bool Texture::Load(std::string filePath, GLenum textureUnit)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	// auto colorCh = GL_RGBA;
-	// if (colorch > 0) {
-	// 	colorCh = colorch;
-	// } else {
-	// 	if (numColCh == 3) {
-	// 		colorCh = GL_RGB;
-	// 	} else if (numColCh == 1) {
-	// 		colorCh = GL_RED;
-	// 	}
-	// }
-	//auto colorCh = GL_BGRA;
-	//if (numColCh == 3) {
-	//	colorCh = GL_BGR;
-	//}
-	width = m_Img.cols;
-	height = m_Img.rows;
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Img.cols, m_Img.rows, 0, GL_RGB, GL_UNSIGNED_BYTE, m_Img.data);
+	width = src_img.cols;
+	height = src_img.rows;
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, src_img.cols, src_img.rows, 0, GL_RGB, GL_UNSIGNED_BYTE, src_img.data);
 	// Generates MipMaps
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(texture_data, 0);		// unbind
-	// stbi_image_free(pictureData);
-
-	return true;
 }
 
 bool Texture::stbiLoad(std::string filePath, GLenum textureUnit, int colorch)

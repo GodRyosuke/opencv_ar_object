@@ -8,6 +8,5 @@ public:
     void UpdateActor() override;
 
 private:
-    class SpriteComponent* m_SpriteComp;
-    const double m_imageRatio;
+    class VideoComponent* m_VideoComp;
 };
