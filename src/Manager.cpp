@@ -12,7 +12,7 @@ Manager::Manager()
     :m_Renderer(new Renderer())
 {
     if (!Init()) {
-        printf("error: failed to initialize manager\n");
+        Util::Print("error: failed to initialize manager\n");
         m_IsRun = false;
         return;
     }
@@ -28,7 +28,7 @@ Manager::~Manager()
 bool Manager::Init()
 {
     if (!m_Renderer->Init()) {
-        printf("error: failed to initialize renderer\n");
+        Util::Print("error: failed to initialize renderer\n");
         return false;
     }
 
@@ -56,6 +56,7 @@ void Manager::Run()
         Update();
         m_Renderer->Draw();
         glfwPollEvents();
+        // Util::Print("dalfjkdla", 23, " flakjdf\n");
     }
 }
 
@@ -68,7 +69,7 @@ void Manager::RemoveActor(std::string name)
 {
     auto iter = m_Actors.find(name);
     if (iter == m_Actors.end()) {
-        printf("error: failed to remove actor: %s\n", name.c_str());
+        Util::Print("error: failed to remove actor: ", name.c_str(), '\n');
         return;
     }
     m_Actors.erase(name);

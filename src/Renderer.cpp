@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Util.hpp"
+#include "Shader.hpp"
 
 Renderer::Renderer()
     :m_ScreenWidth(640)
@@ -60,6 +62,26 @@ void Renderer::Draw()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glfwSwapBuffers(m_GLFWWindow);
+}
+
+void Renderer::AddShader(std::string name, Shader* shader)
+{
+    auto iter = m_Shaders.find(name);
+    if (iter != m_Shaders.end()) {
+        Util::Print("error: shader ", name, " is already added\n");
+        return;
+    }
+    m_Shaders.emplace(name, shader);
+}
+
+Shader* Renderer::GetShader(std::string name)
+{
+    auto iter = m_Shaders.find(name);
+    if (iter == m_Shaders.end()) {
+        Util::Print("error: failed to open shader: ", name, '\n');
+        return nullptr;
+    }
+    return m_Shaders[name];
 }
 
 std::vector<std::function<void(GLFWwindow*, int, int, int, int)>> Renderer::m_KeyCallbacks;

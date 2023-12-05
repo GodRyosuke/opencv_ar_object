@@ -1,9 +1,13 @@
 set (PROJECT_SRC
     Manager.cpp
     Renderer.cpp
+    Shader.cpp
+    VertexArray.cpp
+    Texture.cpp
     # Util.cpp
     Actor/Actor.cpp
     Component/Component.cpp
+    Component/SpriteComponent.cpp
 )
 add_library(main_lib ${PROJECT_SRC})
 target_include_directories(main_lib PUBLIC
