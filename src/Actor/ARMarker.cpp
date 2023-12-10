@@ -40,12 +40,19 @@ void ARMarker::UpdateActor()
     cv::Ptr<cv::aruco::DetectorParameters> params = cv::aruco::DetectorParameters::create();
     cv::aruco::detectMarkers(currentFrame, m_dictionary, corners, ids, params, rejectedCandidates);
 
-    if (ids.size() > 0) {
-        cv::aruco::drawDetectedMarkers(detected_img, corners, ids);
-    }
     cv::Mat cameraMat = (cv::Mat_<double>(3,3) << 852.8839555848483, 0, 639.5, 0, 852.215118770151, 359.5, 0, 0, 1);
     cv::Mat distCoeffs = (cv::Mat_<double>(1,5) << 0.08005910250868746, -0.3113160415419927, 0, 0, 0.196456176823346);
-    
+    std::vector<cv::Vec3d> marker_rots;
+    std::vector<cv::Vec3d> marker_trans;
+
+    if (ids.size() > 0) {
+    // if ((ids.size() > 0) && (corners.size() > 0)) {
+        cv::aruco::drawDetectedMarkers(detected_img, corners, ids);
+        cv::aruco::estimatePoseSingleMarkers(corners, 0.055, cameraMat, distCoeffs, marker_rots, marker_trans);
+    }
+    for (int i = 0; i < ids.size(); i++) {
+        cv::aruco::drawAxis(detected_img, cameraMat, distCoeffs, marker_rots[i], marker_trans[i], 0.05);
+    }
 
     m_DetectedImgTex->Update(detected_img);
 
