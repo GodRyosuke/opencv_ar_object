@@ -1,5 +1,6 @@
 #include "Component/MeshComponent.hpp"
 
+#include "Definitions.hpp"
 #include "Actor/Actor.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
@@ -10,7 +11,7 @@
 #include "Renderer.hpp"
 
 
-MeshComponent::MeshComponent(class Actor* owner, std::string mesh_path, class Shader* shader, bool isSkeletal)
+MeshComponent::MeshComponent(class Actor* owner, std::string mesh_path, Shader* shader, bool isSkeletal)
     :Component(owner)
     // ,m_Mesh(nullptr)
     ,m_IsSkeletal(isSkeletal)
@@ -26,6 +27,14 @@ MeshComponent::MeshComponent(class Actor* owner, std::string mesh_path, class Sh
 void MeshComponent::Draw()
 {
     assert(m_Shader);
+    // m_Shader = m_Owner->GetManager()->m_Renderer->GetShader({
+    //     "UnityChanShader",
+    //     {
+    //     std::string(SHADER_PATH) + "mesh.vert",
+    //     std::string(SHADER_PATH) + "unitychan.frag"
+    //     },
+    //     Shader::ShaderDesc::VERTEX_FRAGMENT
+    // });
     m_Shader->UseProgram();
     if (!m_Mesh) {
         return;

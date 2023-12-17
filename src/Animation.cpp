@@ -1,5 +1,5 @@
 #include "Animation.hpp"
-#include "GLUtil.hpp"
+#include "Util.hpp"
 #include "Skeleton.hpp"
 
 
@@ -210,7 +210,7 @@ void Animation::ReadNodeHierarchy(const aiAnimation* anim, const Skeleton* inSke
     glm::mat4 NodeTransformation;
     {
         aiMatrix4x4 trans = pNode->mTransformation;
-        NodeTransformation = GLUtil::ToGlmMat4(trans);
+        NodeTransformation = Util::ToGlmMat4(trans);
         if (    // 頭のオブジェクトなら
             (NodeTransformation != glm::mat4(1.f)) &&   // EL_DEF(まつ毛)のTransform対策
             (mIsSetMeshMat) &&                          
@@ -244,7 +244,7 @@ void Animation::ReadNodeHierarchy(const aiAnimation* anim, const Skeleton* inSke
         CalcInterpolatedRotation(RotationQ, AnimationTimeTicks, pNodeAnim);
         //Matrix4f RotationM = Matrix4f(RotationQ.GetMatrix());
         aiMatrix3x3 rotationMat = RotationQ.GetMatrix();
-        glm::mat4 RotationM = GLUtil::ToGlmMat4(rotationMat);
+        glm::mat4 RotationM = Util::ToGlmMat4(rotationMat);
         //std::cout << RotationM[0][0] << '\t' << RotationM[0][1] << '\t' << RotationM[0][2] << '\t' << RotationM[0][3] << '\t' << std::endl;
 
         // Interpolate translation and generate translation transformation matrix

@@ -13,6 +13,7 @@
 #include "Actor/UnityChan.hpp"
 #include "Actor/DebugActor.hpp"
 #include "Actor/Grid.hpp"
+#include "Actor/Axis.hpp"
 
 Manager::Manager()
     // :m_Renderer(new Renderer())
@@ -75,7 +76,8 @@ bool Manager::Init()
 
     // Load Actors
     Actor* a = nullptr;
-    // a = new Grid(this);
+    a = new Grid(this);
+    a = new Axis(this);
     a = new UnityChan(this);
     a = new DebugActor(this);
 
@@ -129,9 +131,9 @@ void Manager::Run()
     while (m_IsRun)
     {
         currentTime = glfwGetTime();
-		double timeDiff = currentTime - lastTime;
+		m_DeltaTime = currentTime - lastTime;
 
-		if (timeDiff >= 1.0 / fps)
+		if (m_DeltaTime >= 1.0 / fps)
 		{
 			// Creates new title
 			// std::string FPS = std::to_string((1.0 / timeDiff) * counter);

@@ -2,10 +2,19 @@
 
 #include "Actor/Actor.hpp"
 
-class Grid : public Actor {
+class Line : public Actor {
 public:
-    Grid(class Manager* manager);
+    Line(class Manager* manager, std::string lineName);
 
 private:
     class MeshComponent* m_MeshComp;
+};
+
+class Grid : public Actor {
+public:
+    Grid(class Manager* manager);
+    // ~Grid();
+
+// private:
+//     std::vector<Actor*> m_Lines;
 };

@@ -7,5 +7,5 @@ public:
     UnityChan(class Manager* manager);
 
 private:
-    class MeshComponent* m_MeshComp;
+    class SkinMeshComponent* m_SkinMeshComp;
 };

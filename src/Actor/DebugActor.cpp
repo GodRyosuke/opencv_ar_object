@@ -93,6 +93,7 @@ void DebugActor::ActorInput(GLFWwindow* window)
     glm::vec2 screenSize = GetManager()->GetScreenSize();
     glm::mat4 camProj = glm::perspective<float>(glm::radians(fov), screenSize.x / screenSize.y, nearP, farP);
     GetManager()->m_Renderer->AllShaderProcess([this, camView, camProj](Shader* shader) {
+        shader->UseProgram();
         shader->SetMatrixUniform("CameraView", camView);
         shader->SetMatrixUniform("CameraProj", camProj);
     });

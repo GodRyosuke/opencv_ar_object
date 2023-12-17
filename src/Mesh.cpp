@@ -26,7 +26,9 @@ Texture* LoadTextureFromJson(nl::json data, std::string texRootPath, std::string
     std::string texFileName = *iter;
     std::string texFilePath = texRootPath + texFileName;
     Texture* tex = new Texture();
-    tex->Load(texFilePath);
+    if (!tex->Load(texFilePath)) {
+        return nullptr;
+    }
     return tex;
     // return new Texture(texFilePath);
 }

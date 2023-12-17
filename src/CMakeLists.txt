@@ -5,6 +5,7 @@ set (PROJECT_SRC
     VertexArray.cpp
     Texture.cpp
     Mesh.cpp
+    Animation.cpp
     Skeleton.cpp
     Util.cpp
     Actor/Actor.cpp
@@ -14,9 +15,11 @@ set (PROJECT_SRC
     Actor/DebugActor.cpp
     Actor/UnityChan.cpp
     Actor/Grid.cpp
+    Actor/Axis.cpp
     Component/Component.cpp
     Component/SpriteComponent.cpp
     Component/MeshComponent.cpp
+    Component/SkinMeshComponent.cpp
     Component/VideoComponent.cpp
     # Component/CameraComponent.cpp
 )

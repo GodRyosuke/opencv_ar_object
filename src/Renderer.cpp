@@ -6,8 +6,10 @@
 #include "Util.hpp"
 #include "Shader.hpp"
 #include "Mesh.hpp"
+#include "Animation.hpp"
 #include "Component/SpriteComponent.hpp"
 #include "Component/MeshComponent.hpp"
+#include "Component/SkinMeshComponent.hpp"
 
 Renderer::Renderer(Manager* manager)
     :m_Manager(manager)
@@ -49,12 +51,22 @@ Renderer::~Renderer()
 		delete i.second;
 	}
     m_Meshes.clear();
+
+    for (auto i : m_Animations)
+	{
+		delete i.second;
+	}
+	m_Animations.clear();
     
     for (auto i : m_Shaders)
 	{
 		delete i.second;
 	}
 	m_Shaders.clear();
+
+    m_MeshComps.clear();
+    m_SkinMeshComps.clear();
+    
     
     // m_KeyCallbacks.clear();
 
@@ -67,7 +79,7 @@ Renderer::~Renderer()
 
 void Renderer::Draw()
 {
-    glClearColor(0.f, 0.5f, 0.7f, 1.0f);
+    glClearColor(0.86f, 0.86f, 0.86f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glm::vec2 winSize = m_Manager->GetScreenSize();
     glViewport(0, 0, winSize.x, winSize.y);
@@ -75,9 +87,9 @@ void Renderer::Draw()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // for (auto sk : mSkinMeshComps) {
-    //     sk->Draw();
-    // }
+    for (auto sk : m_SkinMeshComps) {
+        sk->Draw();
+    }
     for (auto mc : m_MeshComps) {
         mc->Draw();
     }
@@ -171,12 +183,46 @@ Mesh* Renderer::GetMesh(const std::string fileName, bool isSkeletal)
     return m;
 }
 
+const Animation* Renderer::GetAnimation(std::string fileName)
+{
+    Animation* anim = nullptr;
+
+    auto iter = m_Animations.find(fileName);
+    if (iter != m_Animations.end())
+    {
+        // すでに読み込まれていたら
+        anim = iter->second;
+    }
+    else
+    {
+        // 同名のMesh fileがあればそれをAnimationファイルとして使用
+		auto mIter = m_Meshes.find(fileName);
+		if (mIter != m_Meshes.end()) {	// Mesh fileをAnimationとして併用
+			anim = new Animation(mIter->second->GetaiScene());
+			return anim;
+		} 
+		
+        anim = new Animation();
+        if (anim->Load(fileName))
+        {
+            m_Animations.emplace(fileName, anim);
+        }
+        else
+        {
+            delete anim;
+            anim = nullptr;
+        }
+    }
+
+    return anim;
+}
+
 void Renderer::AddMeshComp(MeshComponent* mesh)
 {
 	if (mesh->m_IsSkeletal)
 	{
-		// SkinMeshComponent* sk = static_cast<SkinMeshComponent*>(mesh);
-		// mSkinMeshComps.emplace_back(sk);
+		SkinMeshComponent* sk = static_cast<SkinMeshComponent*>(mesh);
+		m_SkinMeshComps.emplace_back(sk);
 	}
 	else
 	{

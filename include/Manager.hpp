@@ -16,6 +16,7 @@ public:
     const class Actor* GetActor(std::string actorName);
     void RemoveActor(std::string name);
     glm::vec2 GetScreenSize() const { return glm::vec2(m_ScreenWidth, m_ScreenHeight); }
+    double GetDeltaTime() const { return m_DeltaTime; }
 
     class Renderer* m_Renderer;
 private:
@@ -28,6 +29,7 @@ private:
     GLFWwindow* m_GLFWWindow;
     int m_ScreenWidth;
     int m_ScreenHeight;
+    double m_DeltaTime;
 
 
 
