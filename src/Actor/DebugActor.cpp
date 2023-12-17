@@ -103,8 +103,17 @@ void DebugActor::UpdateCameraOrientation(glm::vec2 mousePos)
 {
     glm::vec2 screenSize = GetManager()->GetScreenSize();
     const double moveSensitivity = 100.0;
-    double rotX = moveSensitivity * (mousePos.y - (screenSize.y/2)) / screenSize.y;
-    double rotY = moveSensitivity * (mousePos.x - (screenSize.x/2)) / screenSize.x;
+    double deltaY = mousePos.y - (screenSize.y/2);
+    double deltaX = mousePos.x - (screenSize.x/2);
+    double rotX = 0;
+    double rotY = 0;
+    // 画面のサイズが奇数であるときの対策
+    if (std::abs(deltaX) >= 1.0) {
+        rotY = moveSensitivity * (deltaX) / screenSize.x;
+    }
+    if (std::abs(deltaY) >= 1.0) {
+        rotX = moveSensitivity * (deltaY) / screenSize.y;
+    }
 
     // 垂直方向の更新
     glm::vec3 newOrientation = glm::rotate<float>(m_CameraOrientation, glm::radians(-rotX), glm::normalize(glm::cross(m_CameraOrientation, m_CameraUp)));
