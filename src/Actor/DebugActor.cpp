@@ -14,7 +14,7 @@
 
 DebugActor::DebugActor(Manager* manager)
     :Actor(manager, "DebugActor")
-    ,m_CameraOrientation(glm::vec3(0.5f, 0.f, 0.f))
+    ,m_CameraOrientation(glm::vec3(0.f, -0.5f, 0.f))
     ,m_CameraUp(glm::vec3(0.f, 0.f, 1.f))
     ,m_IsFirstClick(true)
 {
@@ -37,11 +37,11 @@ DebugActor::DebugActor(Manager* manager)
     // );
 }
 
-void DebugActor::ActorInput(InputEvent::Data event)
+void DebugActor::ActorInput(GLFWwindow* window)
 {
     glm::vec3 cameraPos = GetPosition();
     const float keyMoveSpeed = 0.1f;
-    if (glfwGetKey(event.window, GLFW_KEY_W) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         // 前へ進む
         cameraPos += keyMoveSpeed * m_CameraOrientation;
     }
@@ -49,40 +49,40 @@ void DebugActor::ActorInput(InputEvent::Data event)
     //     // 前へ進む
     //     cameraPos += keyMoveSpeed * m_CameraOrientation;
     // }
-    if (glfwGetKey(event.window, GLFW_KEY_S) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         // 後ろへ下がる
         cameraPos -= keyMoveSpeed * m_CameraOrientation;
     }
-    if (glfwGetKey(event.window, GLFW_KEY_A) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
         // 左
         cameraPos -= keyMoveSpeed * glm::normalize(glm::cross(m_CameraOrientation, m_CameraUp));
     }
-    if (glfwGetKey(event.window, GLFW_KEY_D) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         // 右
         cameraPos += keyMoveSpeed * glm::normalize(glm::cross(m_CameraOrientation, m_CameraUp));
     }
     SetPosition(cameraPos);
 
     // カメラの向きを更新
-    if (glfwGetMouseButton(event.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
     // if (event.key == GLFW_MOUSE_BUTTON_LEFT && event.action == GLFW_PRESS) {
-        glfwSetInputMode(event.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
         // 初回クリック時はカーソルを中央に移動
-        glm::vec2 screenSize = GetManager()->m_Renderer->GetScreenSize();
+        glm::vec2 screenSize = GetManager()->GetScreenSize();
         if (m_IsFirstClick) {
-            glfwSetCursorPos(event.window, screenSize.x / 2.f, screenSize.y / 2.f);
+            glfwSetCursorPos(window, screenSize.x / 2.f, screenSize.y / 2.f);
             m_IsFirstClick = false;
         }
         double mouseX;
         double mouseY;
-        glfwGetCursorPos(event.window, &mouseX, &mouseY);
+        glfwGetCursorPos(window, &mouseX, &mouseY);
         UpdateCameraOrientation(glm::vec2(mouseX, mouseY));
         // カーソル位置を画面中央に戻す
-        glfwSetCursorPos(event.window, screenSize.x / 2.f, screenSize.y / 2.f);
+        glfwSetCursorPos(window, screenSize.x / 2.f, screenSize.y / 2.f);
     // } else if (event.key == GLFW_MOUSE_BUTTON_LEFT && event.action == GLFW_RELEASE) {
-    } else if (glfwGetMouseButton(event.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
-        glfwSetInputMode(event.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    } else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         m_IsFirstClick = true;
     }
 
@@ -90,7 +90,7 @@ void DebugActor::ActorInput(InputEvent::Data event)
     const double nearP = 0.1f;
     const double farP = 200;
     glm::mat4 camView = glm::lookAt(GetPosition(), GetPosition() + m_CameraOrientation, m_CameraUp);
-    glm::vec2 screenSize = GetManager()->m_Renderer->GetScreenSize();
+    glm::vec2 screenSize = GetManager()->GetScreenSize();
     glm::mat4 camProj = glm::perspective<float>(glm::radians(fov), screenSize.x / screenSize.y, nearP, farP);
     GetManager()->m_Renderer->AllShaderProcess([this, camView, camProj](Shader* shader) {
         shader->SetMatrixUniform("CameraView", camView);
@@ -100,7 +100,7 @@ void DebugActor::ActorInput(InputEvent::Data event)
 
 void DebugActor::UpdateCameraOrientation(glm::vec2 mousePos)
 {
-    glm::vec2 screenSize = GetManager()->m_Renderer->GetScreenSize();
+    glm::vec2 screenSize = GetManager()->GetScreenSize();
     const double moveSensitivity = 100.0;
     double rotX = moveSensitivity * (mousePos.y - (screenSize.y/2)) / screenSize.y;
     double rotY = moveSensitivity * (mousePos.x - (screenSize.x/2)) / screenSize.x;
@@ -122,7 +122,7 @@ void DebugActor::UpdateActor()
     // const double nearP = 0.1f;
     // const double farP = 200;
     // glm::mat4 camView = glm::lookAt(GetPosition(), GetPosition() + m_CameraOrientation, m_CameraUp);
-    // glm::vec2 screenSize = GetManager()->m_Renderer->GetScreenSize();
+    // glm::vec2 screenSize = GetManager()->GetScreenSize();
     // glm::mat4 camProj = glm::perspective<float>(glm::radians(fov), screenSize.x / screenSize.y, nearP, farP);
     // GetManager()->m_Renderer->AllShaderProcess([this, camView, camProj](Shader* shader) {
     //     shader->SetMatrixUniform("CameraView", camView);

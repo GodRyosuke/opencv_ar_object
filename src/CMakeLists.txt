@@ -13,6 +13,7 @@ set (PROJECT_SRC
     Actor/ARMarker.cpp
     Actor/DebugActor.cpp
     Actor/UnityChan.cpp
+    Actor/Grid.cpp
     Component/Component.cpp
     Component/SpriteComponent.cpp
     Component/MeshComponent.cpp

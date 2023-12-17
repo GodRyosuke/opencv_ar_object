@@ -133,8 +133,8 @@ bool Mesh::Load(std::string filePath, bool isSkeletal)
             ifs >> materialJsonMap;
         }
         else {
-            Util::Printf("error: failed to load material.josn\n");
-            return false;
+            Util::Printf("warn: failed to load material.josn\n");
+            // return false;
         }
         ifs.close();
     }

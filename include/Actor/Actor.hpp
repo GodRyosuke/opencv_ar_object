@@ -19,9 +19,9 @@ public:
     // Actor固有の更新
     virtual void UpdateActor();
 
-    void ProcessInput(InputEvent::Data event);
+    void ProcessInput(GLFWwindow* window);
     // Acttor固有の入力
-    virtual void ActorInput(InputEvent::Data event);
+    virtual void ActorInput(GLFWwindow* window);
 
     const glm::vec3& GetPosition() const { return mPosition; }
     void SetBaseForward(glm::vec3 base) { mBaseForward = base; }

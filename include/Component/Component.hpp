@@ -15,7 +15,7 @@ public:
     // Update this component by delta time
     virtual void Update();
     // Process input for this component
-    virtual void ProcessInput(InputEvent::Data event) {}
+    virtual void ProcessInput(GLFWwindow* window) {}
     // Called when world transform changes
     virtual void OnUpdateWorldTransform() { }
 

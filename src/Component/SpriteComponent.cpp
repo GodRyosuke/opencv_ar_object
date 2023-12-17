@@ -53,8 +53,8 @@ void SpriteComponent::Draw()
         return;
     }
     
-	float screenWidth = m_Owner->GetManager()->m_Renderer->GetScreenSize().x;
-	float screenHeight = m_Owner->GetManager()->m_Renderer->GetScreenSize().y;
+	float screenWidth = m_Owner->GetManager()->GetScreenSize().x;
+	float screenHeight = m_Owner->GetManager()->GetScreenSize().y;
 	glm::mat4 spriteViewProj = glm::mat4({
         { 2.0f/screenWidth, 0.0f, 0.0f, 0.0f },
         { 0.0f, 2.0f/screenHeight, 0.0f, 0.0f },

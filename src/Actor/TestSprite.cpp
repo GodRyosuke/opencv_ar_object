@@ -18,7 +18,7 @@ TestSprite::TestSprite(Manager* manager)
 
     // textureの幅を画面のm_imageRatio倍に合わせる
     glm::vec2 texScale = glm::vec2(static_cast<float>(tex->GetWidth()) , static_cast<float>(tex->GetHeight()));
-    texScale *= manager->m_Renderer->GetScreenSize().x * m_imageRatio / tex->GetWidth();
+    texScale *= manager->GetScreenSize().x * m_imageRatio / tex->GetWidth();
     glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(texScale.x, texScale.y, 1.f));
     SetScale(scaleMat);
 }
@@ -28,7 +28,7 @@ void TestSprite::UpdateActor()
     // textureの幅を現在の画面サイズの幅のm_imageRatio倍に合わせる
     const Texture* tex = m_SpriteComp->GetTexture();
     glm::vec2 texScale = glm::vec2(static_cast<float>(tex->GetWidth()) , static_cast<float>(tex->GetHeight()));
-    texScale *= m_Manager->m_Renderer->GetScreenSize().x * m_imageRatio / tex->GetWidth();
+    texScale *= m_Manager->GetScreenSize().x * m_imageRatio / tex->GetWidth();
     glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(texScale.x, texScale.y, 1.f));
     SetScale(scaleMat);
 }

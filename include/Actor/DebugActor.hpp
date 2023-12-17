@@ -2,10 +2,11 @@
 
 #include "Actor/Actor.hpp"
 
+
 class DebugActor : public Actor {
 public:
     DebugActor(class Manager* manager);
-    void ActorInput(InputEvent::Data event) override;
+    void ActorInput(GLFWwindow* window) override;
     void UpdateActor() override;
 
 private:

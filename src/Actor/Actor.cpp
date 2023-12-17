@@ -59,17 +59,17 @@ void Actor::UpdateActor()
 {
 }
 
-void Actor::ProcessInput(InputEvent::Data event)
+void Actor::ProcessInput(GLFWwindow* window)
 {
     for (auto comp : mComponents)
     {
-        comp->ProcessInput(event);
+        comp->ProcessInput(window);
     }
 
-    ActorInput(event);
+    ActorInput(window);
 }
 
-void Actor::ActorInput(InputEvent::Data event)
+void Actor::ActorInput(GLFWwindow* window)
 {
 
 }
