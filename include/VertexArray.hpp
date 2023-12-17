@@ -8,6 +8,11 @@ class VertexArray
 public:
     // for 3D mesh
     VertexArray(std::vector<glm::vec3>positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texcoords, std::vector<unsigned int> indices);
+    // for 3D mesh with tangents
+    // VertexArray(std::vector<glm::vec3>positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texcoords, std::vector<glm::vec3> tangents, std::vector<unsigned int> indices);
+
+    // for 3D skin mesh with tangents
+    VertexArray(std::vector<glm::vec3>positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texcoords, std::vector<glm::vec3> tangents, std::vector<unsigned int> indices, const class Skeleton* sk = nullptr);
     // for 2D sprites
     VertexArray(std::vector<glm::vec3>positions, std::vector<glm::vec2> texcoords, std::vector<unsigned int> indices);
     // VertexArray(std::vector<glm::vec3>positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texcoords,

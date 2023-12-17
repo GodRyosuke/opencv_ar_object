@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <opencv2/opencv.hpp>
 
@@ -12,14 +13,13 @@ Texture::Texture(GLenum texUnit)
 {
 }
 
-Texture::Texture(std::string filePath, GLenum texUnit)
-	:m_TexUnit(texUnit)
-{
-	if (!Load(filePath)) {
-		Util::Print("failed to load texture\n");
-	}
-}
-
+// Texture::Texture(std::string filePath, GLenum texUnit)
+// 	:m_TexUnit(texUnit)
+// {
+// 	if (!Load(filePath)) {
+// 		Util::Print("failed to load texture\n");
+// 	}
+// }
 
 Texture::Texture(GLuint textureData,  GLenum texUnit, int width, int height)
 	:texture_data(textureData)
@@ -30,6 +30,49 @@ Texture::Texture(GLuint textureData,  GLenum texUnit, int width, int height)
 }
 
 bool Texture::Load(std::string filePath)
+{
+	// Load from file
+	int numColCh;
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* pictureData = stbi_load(filePath.c_str(), &width, &height, &numColCh, 0);
+
+	if (!pictureData) {
+		printf("error: failed to load texture: %s\n", filePath.c_str());
+		return false;
+	}
+	
+	glGenTextures(1, &texture_data);
+	glActiveTexture(m_TexUnit);
+	glBindTexture(GL_TEXTURE_2D, texture_data);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	auto colorCh = GL_RGBA;
+	if (numColCh == 3) {
+		colorCh = GL_RGB;
+	} else if (numColCh == 1) {
+		colorCh = GL_RED;
+	}
+	// if (colorch > 0) {
+	// 	colorCh = colorch;
+	// } else {
+	// }
+	//auto colorCh = GL_BGRA;
+	//if (numColCh == 3) {
+	//	colorCh = GL_BGR;
+	//}
+	glTexImage2D(GL_TEXTURE_2D, 0, colorCh, width, height, 0, colorCh, GL_UNSIGNED_BYTE, pictureData);
+	// Generates MipMaps
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(texture_data, 0);		// unbind
+	stbi_image_free(pictureData);
+	return true;
+}
+
+bool Texture::LoadCV(std::string filePath)
 {
 	cv::Mat src_img;
 	src_img = cv::imread(filePath, cv::IMREAD_COLOR);

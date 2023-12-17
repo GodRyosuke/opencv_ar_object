@@ -5,10 +5,13 @@
 
 #include "Renderer.hpp"
 #include "Util.hpp"
+#include "InputEvent.hpp"
 #include "Actor/Actor.hpp"
 #include "Actor/TestSprite.hpp"
 #include "Actor/Capture.hpp"
 #include "Actor/ARMarker.hpp"
+#include "Actor/UnityChan.hpp"
+#include "Actor/DebugActor.hpp"
 
 Manager::Manager()
     :m_Renderer(new Renderer())
@@ -24,6 +27,12 @@ Manager::Manager()
 
 Manager::~Manager()
 {
+    for (auto i : m_Actors)
+	{
+		delete i.second;
+	}
+	m_Actors.clear();
+    
     delete m_Renderer;
 }
 
@@ -42,9 +51,22 @@ bool Manager::Init()
 
     // Load Actors
     Actor* a = nullptr;
+    a = new UnityChan(this);
+    a = new DebugActor(this);
+
+
+    m_Renderer->SetKeyCallback([this](GLFWwindow* window, int key, int scancode, int action, int mods)->void {
+        InputEvent::Data event({window, key, scancode, action, mods});
+        for (auto actor : this->m_Actors) {
+            actor.second->ProcessInput(event);
+        }
+        // if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        //     this->m_IsRun = false;
+        // }
+    });
     // a = new TestSprite(this);
-    a = new Capture(this);
-    a = new ARMarker(this);
+    // a = new Capture(this);
+    // a = new ARMarker(this);
 
     return true;
 }
@@ -73,6 +95,11 @@ void Manager::Run()
 
 void Manager::AddActor(Actor* actor)
 {
+    auto iter = m_Actors.find(actor->m_Name);
+    if (iter != m_Actors.end()) {
+        Util::Printf("error: actor %s is already added to manager\n", actor->m_Name.c_str());
+        return;
+    }
     m_Actors.emplace(actor->m_Name.c_str(), actor);
 }
 

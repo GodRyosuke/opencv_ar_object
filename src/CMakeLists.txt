@@ -4,14 +4,20 @@ set (PROJECT_SRC
     Shader.cpp
     VertexArray.cpp
     Texture.cpp
-    # Util.cpp
+    Mesh.cpp
+    Skeleton.cpp
+    Util.cpp
     Actor/Actor.cpp
     Actor/TestSprite.cpp
     Actor/Capture.cpp
     Actor/ARMarker.cpp
+    Actor/DebugActor.cpp
+    Actor/UnityChan.cpp
     Component/Component.cpp
     Component/SpriteComponent.cpp
+    Component/MeshComponent.cpp
     Component/VideoComponent.cpp
+    # Component/CameraComponent.cpp
 )
 add_library(main_lib ${PROJECT_SRC})
 target_include_directories(main_lib PUBLIC

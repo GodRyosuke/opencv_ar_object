@@ -11,7 +11,9 @@ TestSprite::TestSprite(Manager* manager)
     :Actor(manager, "TestSprite")
     ,m_imageRatio(0.7)
 {
-    Texture* tex = new Texture(std::string(ASSET_PATH) + "socket_img.jpg", GL_TEXTURE0);
+    Texture* tex = new Texture();
+    tex->Load(std::string(ASSET_PATH) + "socket_img.jpg");
+    // Texture* tex = new Texture(std::string(ASSET_PATH) + "socket_img.jpg", GL_TEXTURE0);
     m_SpriteComp = new SpriteComponent(this, tex);
 
     // textureの幅を画面のm_imageRatio倍に合わせる
