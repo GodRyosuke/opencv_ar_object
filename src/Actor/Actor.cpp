@@ -28,7 +28,7 @@ Actor::Actor(Manager* manager, std::string name)
 
 Actor::~Actor()
 {
-    m_Manager->RemoveActor(m_Name);
+    // m_Manager->RemoveActor(m_Name);
     // Need to delete components
     // Because ~Component calls RemoveComponent, need a different style loop
     while (!mComponents.empty())
@@ -59,7 +59,7 @@ void Actor::UpdateActor()
 {
 }
 
-void Actor::ProcessInput(const InputEvent* event)
+void Actor::ProcessInput(InputEvent::Data event)
 {
     for (auto comp : mComponents)
     {
@@ -69,7 +69,7 @@ void Actor::ProcessInput(const InputEvent* event)
     ActorInput(event);
 }
 
-void Actor::ActorInput(const InputEvent* event)
+void Actor::ActorInput(InputEvent::Data event)
 {
 
 }

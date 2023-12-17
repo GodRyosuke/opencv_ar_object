@@ -5,7 +5,9 @@
 class TestSprite : public Actor {
 public:
     TestSprite(class Manager* manager);
+    void UpdateActor() override;
 
 private:
-    class Component* m_SpriteComp;
+    class SpriteComponent* m_SpriteComp;
+    const double m_imageRatio;
 };

@@ -2,6 +2,7 @@
 #include <cstdint>
 
 #include "Actor/Actor.hpp"
+#include "InputEvent.hpp"
 
 class Component
 {
@@ -14,7 +15,7 @@ public:
     // Update this component by delta time
     virtual void Update();
     // Process input for this component
-    virtual void ProcessInput(const class InputEvent* event) {}
+    virtual void ProcessInput(InputEvent::Data event) {}
     // Called when world transform changes
     virtual void OnUpdateWorldTransform() { }
 

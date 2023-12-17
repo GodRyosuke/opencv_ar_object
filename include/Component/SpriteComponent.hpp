@@ -4,18 +4,24 @@
 #include "glm/glm.hpp"
 #include "glad/glad.h"
 
+#include "Shader.hpp"
 
 class SpriteComponent : public Component {
 public:
-    SpriteComponent(class Actor* owner);
+    SpriteComponent(class Actor* owner, class Texture* tex);
     ~SpriteComponent();
-    void SetTexture(class Texture* tex) { mTexture = tex; }
+    // void SetTexture(class Texture* tex) { mTexture = tex; }
     void Draw();
 
-private:
+    const class Texture* GetTexture() { return m_Texture; };
+    bool m_DisableDrawing;
+
+protected:
     float* mSpriteVertices;
     class VertexArray* mVAO;
-    class Texture* mTexture;
-    GLenum mTextureUnit;
+    // GLenum mTextureUnit;
+    const Shader::ShaderDesc m_ShaderDesc;
+    class Texture* m_Texture;
+
     // glm::mat4 mSpriteViewProj;
 };

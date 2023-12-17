@@ -6,6 +6,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 
+#include "InputEvent.hpp"
+
 class Actor {
 public:
     Actor(class Manager* manager, std::string name);
@@ -17,9 +19,9 @@ public:
     // Actor固有の更新
     virtual void UpdateActor();
 
-    void ProcessInput(const class InputEvent* event);
+    void ProcessInput(InputEvent::Data event);
     // Acttor固有の入力
-    virtual void ActorInput(const class InputEvent* event);
+    virtual void ActorInput(InputEvent::Data event);
 
     const glm::vec3& GetPosition() const { return mPosition; }
     void SetBaseForward(glm::vec3 base) { mBaseForward = base; }
