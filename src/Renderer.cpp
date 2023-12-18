@@ -64,8 +64,14 @@ Renderer::~Renderer()
 	}
 	m_Shaders.clear();
 
-    m_MeshComps.clear();
-    m_SkinMeshComps.clear();
+    m_Drawers.clear();
+    // while (!m_Drawers.empty())
+    // {
+    //     delete m_Drawers.back();
+    // }
+
+    // m_MeshComps.clear();
+    // m_SkinMeshComps.clear();
     
     
     // m_KeyCallbacks.clear();
@@ -83,28 +89,35 @@ void Renderer::Draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glm::vec2 winSize = m_Manager->GetScreenSize();
     glViewport(0, 0, winSize.x, winSize.y);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    for (auto sk : m_SkinMeshComps) {
-        sk->Draw();
+    
+    for (auto drawer : m_Drawers) {
+        drawer->Draw();
     }
-    for (auto mc : m_MeshComps) {
-        mc->Draw();
-    }
+    
+    
+    
+    // glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_BLEND);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// Draw Sprites
-	glDisable(GL_DEPTH_TEST);
-	// Enable alpha blending on the color buffer
-	glEnable(GL_BLEND);
-	glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+    // for (auto sk : m_SkinMeshComps) {
+    //     sk->Draw();
+    // }
+    // for (auto mc : m_MeshComps) {
+    //     mc->Draw();
+    // }
 
-	// mSpriteShader->UseProgram();
-	for (auto sprite : m_SpriteComps) {
-		sprite->Draw();
-	}
+	// // Draw Sprites
+	// glDisable(GL_DEPTH_TEST);
+	// // Enable alpha blending on the color buffer
+	// glEnable(GL_BLEND);
+	// glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+	// glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+
+	// // mSpriteShader->UseProgram();
+	// for (auto sprite : m_SpriteComps) {
+	// 	sprite->Draw();
+	// }
 
 }
 
@@ -217,15 +230,80 @@ const Animation* Renderer::GetAnimation(std::string fileName)
     return anim;
 }
 
-void Renderer::AddMeshComp(MeshComponent* mesh)
+void Renderer::AddSpriteComp(SpriteComponent* sprite, int order)
+{
+    // m_SpriteComps.push_back(sprite);
+    
+    m_Drawers.push_back(new SpriteDrawer(sprite, order));
+    std::sort(m_Drawers.begin(), m_Drawers.end(), [](Drawer* a, Drawer* b)->bool {
+        return a->m_RenderingOrder < b->m_RenderingOrder;
+    });
+}
+
+void Renderer::AddMeshComp(MeshComponent* mesh, int order)
 {
 	if (mesh->m_IsSkeletal)
 	{
 		SkinMeshComponent* sk = static_cast<SkinMeshComponent*>(mesh);
-		m_SkinMeshComps.emplace_back(sk);
+        m_Drawers.push_back(new SkinMeshDrawer(sk, order));
+        
+		// m_SkinMeshComps.emplace_back(sk);
 	}
 	else
 	{
-		m_MeshComps.emplace_back(mesh);
+        m_Drawers.push_back(new MeshDrawer(mesh, order));
+		// m_MeshComps.emplace_back(mesh);
 	}
+    std::sort(m_Drawers.begin(), m_Drawers.end(), [](Drawer* a, Drawer* b)->bool {
+        return a->m_RenderingOrder < b->m_RenderingOrder;
+    });
+}
+
+
+Drawer::Drawer(int order)
+    :m_RenderingOrder(order)
+{}
+
+SpriteDrawer::SpriteDrawer(SpriteComponent* sprite, int order)
+    :Drawer(order)
+    ,m_SpriteComp(sprite)
+{}
+
+void SpriteDrawer::Draw()
+{
+    glDisable(GL_DEPTH_TEST);
+	// Enable alpha blending on the color buffer
+	glEnable(GL_BLEND);
+	glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+
+    m_SpriteComp->Draw();
+}
+
+MeshDrawer::MeshDrawer(MeshComponent* mesh, int order)
+    :Drawer(order)
+    ,m_MeshComp(mesh)
+{}
+
+void MeshDrawer::Draw()
+{
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    m_MeshComp->Draw();
+}
+
+SkinMeshDrawer::SkinMeshDrawer(SkinMeshComponent* skinMesh, int order)
+    :Drawer(order)
+    ,m_SkinMeshComp(skinMesh)
+{}
+
+void SkinMeshDrawer::Draw()
+{
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    m_SkinMeshComp->Draw();
 }

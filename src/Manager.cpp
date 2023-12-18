@@ -80,6 +80,9 @@ bool Manager::Init()
     a = new Axis(this);
     a = new UnityChan(this);
     a = new DebugActor(this);
+    a = new Capture(this);
+    a = new ARMarker(this);
+    // a = new TestSprite(this);
 
 
     // m_Renderer->SetKeyCallback([this](GLFWwindow* window, int key, int scancode, int action, int mods)->void {
@@ -167,7 +170,7 @@ void Manager::AddActor(Actor* actor)
     m_Actors.emplace(actor->m_Name.c_str(), actor);
 }
 
-const Actor* Manager::GetActor(std::string actorName)
+Actor* Manager::GetActor(std::string actorName)
 {
     auto iter = m_Actors.find(actorName);
     if (iter == m_Actors.end()) {

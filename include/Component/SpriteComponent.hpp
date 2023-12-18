@@ -8,7 +8,7 @@
 
 class SpriteComponent : public Component {
 public:
-    SpriteComponent(class Actor* owner, class Texture* tex);
+    SpriteComponent(class Actor* owner, class Texture* tex, int rendOrder = 100);
     ~SpriteComponent();
     // void SetTexture(class Texture* tex) { mTexture = tex; }
     void Draw();

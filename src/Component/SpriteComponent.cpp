@@ -8,7 +8,7 @@
 #include "Texture.hpp"
 #include "Definitions.hpp"
 
-SpriteComponent::SpriteComponent(Actor* owner, Texture* tex)
+SpriteComponent::SpriteComponent(Actor* owner, Texture* tex, int order)
     :Component(owner)
     // ,mTextureUnit(GL_TEXTURE0)
     ,m_Texture(tex)
@@ -39,7 +39,7 @@ SpriteComponent::SpriteComponent(Actor* owner, Texture* tex)
 		2, 3, 0
 	};
     mVAO = new VertexArray(vertices, texcoords, indices);
-    owner->GetManager()->m_Renderer->AddSpriteComp(this);
+    owner->GetManager()->m_Renderer->AddSpriteComp(this, order);
 }
 
 SpriteComponent::~SpriteComponent()

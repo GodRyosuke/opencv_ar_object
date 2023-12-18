@@ -31,6 +31,7 @@ public:
     void SetScale(glm::mat4 scale) { mScale = scale; mRecomputeWorldTransform = true; }
     const glm::quat& GetRotation() const { return mRotation; }
     void SetRotation(const glm::mat4& rotation) { mRotation = rotation;  mRecomputeWorldTransform = true; }
+    void SetRotation(const glm::mat3& rotation) { mRotation = rotation;  mRecomputeWorldTransform = true; }
     void SetRotation(const glm::quat& rotation) { mRotation = rotation;  mRecomputeWorldTransform = true; }
 
     void ComputeWorldTransform();

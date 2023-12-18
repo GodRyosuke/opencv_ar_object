@@ -18,7 +18,7 @@ ARMarker::ARMarker(Manager* manager)
 {
     m_dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
     m_DetectedImgTex = new Texture(GL_TEXTURE0);
-    m_SpriteComp = new SpriteComponent(this, m_DetectedImgTex);
+    m_SpriteComp = new SpriteComponent(this, m_DetectedImgTex, 5);
 
     double screenWidth = manager->GetScreenSize().x;
     double screenHeight = manager->GetScreenSize().y;
@@ -49,6 +49,70 @@ void ARMarker::UpdateActor()
     // if ((ids.size() > 0) && (corners.size() > 0)) {
         cv::aruco::drawDetectedMarkers(detected_img, corners, ids);
         cv::aruco::estimatePoseSingleMarkers(corners, 0.055, cameraMat, distCoeffs, marker_rots, marker_trans);
+        // Util::Print(marker_trans[0], "\n");
+        cv::Mat rotMat;
+        cv::Rodrigues(marker_rots[0], rotMat);
+        int type = rotMat.type();
+        Actor* axisActor = m_Manager->GetActor("axis");
+        axisActor->SetPosition(glm::vec3(marker_trans[0][0], marker_trans[0][1], marker_trans[0][2]));
+        glm::mat3 axisRot(
+            rotMat.at<double>(0, 0), rotMat.at<double>(0, 1), rotMat.at<double>(0, 2),
+            rotMat.at<double>(1, 0), rotMat.at<double>(1, 1), rotMat.at<double>(1, 2),
+            rotMat.at<double>(2, 0), rotMat.at<double>(2, 1), rotMat.at<double>(2, 2)
+        );
+        axisActor->SetRotation(axisRot);
+        glm::mat4 camView = glm::lookAt(glm::vec3(0.f), glm::vec3(1.f, 0.f, -1.f), glm::vec3(0.f, -1.f, 0.f));
+        glm::vec2 screenSize = GetManager()->GetScreenSize();
+        const double fov = 45; // degree
+        const double nearP = 0.1f;
+        const double farP = 200;
+        glm::mat4 camProj;
+        // camProj = glm::perspective<float>(glm::radians(fov), screenSize.x / screenSize.y, nearP, farP);
+
+        // OpenGLのproj matを作る
+        // camProj = glm::mat4(
+        //     2*cameraMat.at<double>(0, 0)/screenSize.x, 0.0, 2*cameraMat.at<double>(0, 2)/screenSize.x - 1, 0.0,
+        //     0.0, -2.0*cameraMat.at<double>(1, 1)/screenSize.y, -2.0*cameraMat.at<double>(1, 2)/screenSize.y + 1, 0.0,
+        //     0.0, 0.0, (farP + nearP)/(farP - nearP), -2*farP*nearP/(farP - nearP),
+        //     0.0, 0.0, 1.0, 0.0
+        // );
+        camProj = glm::mat4(
+            2*cameraMat.at<double>(0, 0)/screenSize.x, 0.0, -2*cameraMat.at<double>(0, 2)/screenSize.x + 1, 0.0,
+            0.0, 2.0*cameraMat.at<double>(1, 1)/screenSize.y, 2.0*cameraMat.at<double>(1, 2)/screenSize.y - 1, 0.0,
+            0.0, 0.0, -(farP + nearP)/(farP - nearP), -2*farP*nearP/(farP - nearP),
+            0.0, 0.0, -1.0, 0.0
+        );
+        // for (int i = 0; i < 3; i++) {
+        //     for (int j = 0; j < 3; j++) {
+        //         camProj[i][j] = cameraMat.at<double>(i, j);
+        //     }
+        // }
+        // for (int i = 0; i < 4; i++) {
+        //     camProj[i][3] = 0.f;
+        //     camProj[3][i] = 0.f;
+        // }
+        // for (int i = 0; i < 4; i++) {
+        //     for (int j = 0; j < 4; j++) {
+        //         Util::Print(camProj[i][j], " ");
+        //     }
+        //     Util::Print("\n");
+        // }
+        // Util::Printf("-------\n");
+
+        // m_Manager->m_Renderer->SpecificShaderProcess("AxisShader", [camView, camProj](Shader* shader)->void {
+        GetManager()->m_Renderer->AllShaderProcess([this, camProj, camView](Shader* shader) {
+            shader->UseProgram();
+            // shader->SetMatrixUniform("CameraView", camView);
+            // shader->SetMatrixUniform("CameraView", camView);
+            shader->SetMatrixUniform("CameraProj", camProj);
+        });
+        // Util::Print(rotMat, "\n");
+    } else {
+        GetManager()->m_Renderer->AllShaderProcess([this](Shader* shader) {
+        shader->UseProgram();
+        shader->SetMatrixUniform("CameraView", glm::mat4(0.f));
+        shader->SetMatrixUniform("CameraProj", glm::mat4(0.f));
+    });
     }
     for (int i = 0; i < ids.size(); i++) {
         cv::aruco::drawAxis(detected_img, cameraMat, distCoeffs, marker_rots[i], marker_trans[i], 0.05);
