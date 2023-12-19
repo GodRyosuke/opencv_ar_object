@@ -37,7 +37,7 @@ bool Texture::Load(std::string filePath)
 	unsigned char* pictureData = stbi_load(filePath.c_str(), &width, &height, &numColCh, 0);
 
 	if (!pictureData) {
-		printf("error: failed to load texture: %s\n", filePath.c_str());
+		Util::Printf("error: failed to load texture: %s\n", filePath.c_str());
 		return false;
 	}
 	
