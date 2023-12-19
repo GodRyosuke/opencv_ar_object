@@ -35,6 +35,7 @@ bool Animation::Load(std::string filePath)
     int num = m_pScene->mNumAnimations;
     assert(num);
     Util::Printf("animation: %s loaded\n", filePath.c_str());
+    return true;
 }
 
 bool Animation::Load(std::string filePath, glm::mat4 meshMat)
