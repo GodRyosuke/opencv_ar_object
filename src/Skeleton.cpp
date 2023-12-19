@@ -29,7 +29,7 @@ bool Skeleton::Load(const aiMesh* mesh, unsigned int meshIdx, unsigned int baseV
             //m_BoneInfo.push_back(bi);
         }
 
-        printf("warn: this mesh does not assigned bone: %s, meshIdx: %d\n", mesh->mName.C_Str(), meshIdx);
+        Util::Printf("warn: this mesh does not assigned bone: %s, meshIdx: %d\n", mesh->mName.C_Str(), meshIdx);
 
         return true;
     }

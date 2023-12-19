@@ -25,7 +25,7 @@ bool Animation::Load(std::string filePath)
     //m_pScene = pScene;
 
     if (!m_pScene) {
-        printf("Error parsing '%s': '%s'\n", filePath.c_str(), m_Importer.GetErrorString());
+        Util::Printf("Error parsing '%s': '%s'\n", filePath.c_str(), m_Importer.GetErrorString());
         return false;
     }
 
@@ -34,7 +34,7 @@ bool Animation::Load(std::string filePath)
 
     int num = m_pScene->mNumAnimations;
     assert(num);
-    printf("animation: %s loaded\n", filePath.c_str());
+    Util::Printf("animation: %s loaded\n", filePath.c_str());
 }
 
 bool Animation::Load(std::string filePath, glm::mat4 meshMat)
