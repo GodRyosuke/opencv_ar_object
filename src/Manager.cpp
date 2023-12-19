@@ -73,6 +73,7 @@ bool Manager::Init()
     bool showOpenGLWorld = false;
     if (!showOpenGLWorld) {
         // ARマーカー上にUnityChan
+
         a = new UnityChan(this);
         a = new Capture(this);
         a = new ARMarker(this);
