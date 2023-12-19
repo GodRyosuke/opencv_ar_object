@@ -95,7 +95,7 @@ void DebugActor::ActorInput(GLFWwindow* window)
     GetManager()->m_Renderer->AllShaderProcess([this, camView, camProj](Shader* shader) {
         shader->UseProgram();
         shader->SetMatrixUniform("CameraView", camView);
-        // shader->SetMatrixUniform("CameraProj", camProj);
+        shader->SetMatrixUniform("CameraProj", camProj);
     });
 }
 

@@ -9,8 +9,8 @@
 #include "Shader.hpp"
 #include "Component/MeshComponent.hpp"
 
-Axis::Axis(Manager* manager)
-    :Actor(manager, "axis")
+Axis::Axis(Manager* manager, std::string name)
+    :Actor(manager, name)
 {
     Shader::ShaderDesc desc({
         "AxisShader",

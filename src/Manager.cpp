@@ -76,29 +76,20 @@ bool Manager::Init()
 
     // Load Actors
     Actor* a = nullptr;
-    a = new Grid(this);
-    a = new Axis(this);
-    a = new UnityChan(this);
-    a = new DebugActor(this);
-    a = new Capture(this);
-    a = new ARMarker(this);
-    // a = new TestSprite(this);
-
-
-    // m_Renderer->SetKeyCallback([this](GLFWwindow* window, int key, int scancode, int action, int mods)->void {
-    //     InputEvent::Data event({window, key, scancode, action, mods});
-    //     for (auto actor : this->m_Actors) {
-    //         actor.second->ProcessInput(event);
-    //     }
-    //     // if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-    //     //     this->m_IsRun = false;
-    //     // }
-    // });
-
-    // a = new TestSprite(this);
-    // a = new Capture(this);
-    // a = new ARMarker(this);
-
+    bool showOpenGLWorld = false;
+    if (!showOpenGLWorld) {
+        // ARマーカー上にUnityChan
+        a = new UnityChan(this);
+        a = new Capture(this);
+        a = new ARMarker(this);
+    } else {
+        // UnityChanをOpenGLで表示
+        a = new Grid(this);
+        a = new Axis(this, "world_axis");
+        a = new UnityChan(this);
+        a = new DebugActor(this);
+    }
+    
     return true;
 }
 

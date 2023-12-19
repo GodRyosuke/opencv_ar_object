@@ -1,7 +1,14 @@
 #include "Actor/ARMarker.hpp"
 
+#define _USE_MATH_DEFINES
+#include "math.h"
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco/charuco.hpp>
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/rotate_vector.hpp"
+#include "glm/gtx/vector_angle.hpp"
+#include "glm/gtx/euler_angles.hpp"
 
 #include "Manager.hpp"
 // #include "Component/VideoComponent.hpp"
@@ -52,21 +59,38 @@ void ARMarker::UpdateActor()
         // Util::Print(marker_trans[0], "\n");
         cv::Mat rotMat;
         cv::Rodrigues(marker_rots[0], rotMat);
-        int type = rotMat.type();
-        Actor* axisActor = m_Manager->GetActor("axis");
-        axisActor->SetPosition(glm::vec3(marker_trans[0][0], marker_trans[0][1], marker_trans[0][2]));
+        
+        // Actor* targetActor = m_Manager->GetActor("marker_axis");
+        Actor* targetActor = m_Manager->GetActor("UnityChan");
+        targetActor->SetPosition(glm::vec3(marker_trans[0][0], marker_trans[0][1], marker_trans[0][2]));
         glm::mat3 axisRot(
-            rotMat.at<double>(0, 0), rotMat.at<double>(0, 1), rotMat.at<double>(0, 2),
-            rotMat.at<double>(1, 0), rotMat.at<double>(1, 1), rotMat.at<double>(1, 2),
-            rotMat.at<double>(2, 0), rotMat.at<double>(2, 1), rotMat.at<double>(2, 2)
+            rotMat.at<double>(0, 0), rotMat.at<double>(1, 0), rotMat.at<double>(2, 0),
+            rotMat.at<double>(0, 1), rotMat.at<double>(1, 1), rotMat.at<double>(2, 1),
+            rotMat.at<double>(0, 2), rotMat.at<double>(1, 2), rotMat.at<double>(2, 2)
         );
-        axisActor->SetRotation(axisRot);
-        glm::mat4 camView = glm::lookAt(glm::vec3(0.f), glm::vec3(1.f, 0.f, -1.f), glm::vec3(0.f, -1.f, 0.f));
+        // axisRot =  glm::inverse(axisRot);
+        // glm::quat rot_quat = axisRot;
+        // glm::vec3 euler = glm::eulerAngles(rot_quat);
+        // axisRot = glm::eulerAngleXYZ(euler.z, euler.y, euler.x);
+        // axisRot = glm::eulerAngleXYZ(-euler.x, -euler.y, -euler.z);
+        // rollを計算
+        // double roll = 0.0;
+        // {
+        //     double cos_theta = std::sqrt(1 - rotMat.at<double>(2, 0)*rotMat.at<double>(2, 0));
+        //     if (cos_theta < 0.0000001) {    // theta == M_PI/2
+        //         roll = std::atan2(rotMat.at<double>(0, 1), rotMat.at<double>(0, 2));
+        //     } else {
+        //         roll = std::atan2(rotMat.at<double>(2, 1)/cos_theta, rotMat.at<double>(2, 2)/cos_theta);
+        //     }
+        // }
+        targetActor->SetRotation(axisRot);
+        targetActor->SetScale(0.001);
+        glm::mat4 camView = glm::lookAt(glm::vec3(0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, -1.f, 0.f));
         glm::vec2 screenSize = GetManager()->GetScreenSize();
-        const double fov = 45; // degree
+        // const double fov = 45; // degree
         const double nearP = 0.1f;
         const double farP = 200;
-        glm::mat4 camProj;
+        // glm::mat4 camProj;
         // camProj = glm::perspective<float>(glm::radians(fov), screenSize.x / screenSize.y, nearP, farP);
 
         // OpenGLのproj matを作る
@@ -76,34 +100,17 @@ void ARMarker::UpdateActor()
         //     0.0, 0.0, (farP + nearP)/(farP - nearP), -2*farP*nearP/(farP - nearP),
         //     0.0, 0.0, 1.0, 0.0
         // );
-        camProj = glm::mat4(
+        glm::mat4 camProj = glm::mat4(
             2*cameraMat.at<double>(0, 0)/screenSize.x, 0.0, -2*cameraMat.at<double>(0, 2)/screenSize.x + 1, 0.0,
             0.0, 2.0*cameraMat.at<double>(1, 1)/screenSize.y, 2.0*cameraMat.at<double>(1, 2)/screenSize.y - 1, 0.0,
             0.0, 0.0, -(farP + nearP)/(farP - nearP), -2*farP*nearP/(farP - nearP),
             0.0, 0.0, -1.0, 0.0
         );
-        // for (int i = 0; i < 3; i++) {
-        //     for (int j = 0; j < 3; j++) {
-        //         camProj[i][j] = cameraMat.at<double>(i, j);
-        //     }
-        // }
-        // for (int i = 0; i < 4; i++) {
-        //     camProj[i][3] = 0.f;
-        //     camProj[3][i] = 0.f;
-        // }
-        // for (int i = 0; i < 4; i++) {
-        //     for (int j = 0; j < 4; j++) {
-        //         Util::Print(camProj[i][j], " ");
-        //     }
-        //     Util::Print("\n");
-        // }
-        // Util::Printf("-------\n");
-
+        camProj = glm::transpose(camProj);
         // m_Manager->m_Renderer->SpecificShaderProcess("AxisShader", [camView, camProj](Shader* shader)->void {
         GetManager()->m_Renderer->AllShaderProcess([this, camProj, camView](Shader* shader) {
             shader->UseProgram();
-            // shader->SetMatrixUniform("CameraView", camView);
-            // shader->SetMatrixUniform("CameraView", camView);
+            shader->SetMatrixUniform("CameraView", camView);
             shader->SetMatrixUniform("CameraProj", camProj);
         });
         // Util::Print(rotMat, "\n");
