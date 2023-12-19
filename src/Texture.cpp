@@ -91,7 +91,7 @@ void Texture::CreateGLTex(cv::Mat src_img_data)
 	cv::Mat src_img = src_img_data.clone();
 	cv::flip(src_img, src_img, 0);
 	cv::cvtColor(src_img, src_img, cv::COLOR_BGR2RGB);
-	int cv_type = src_img.type();
+	// int cv_type = src_img.type();
 	
 	glGenTextures(1, &texture_data);
 	glActiveTexture(m_TexUnit);

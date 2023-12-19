@@ -12,18 +12,11 @@ VideoComponent::VideoComponent(Actor* owner)
     :SpriteComponent(owner, new Texture(GL_TEXTURE0))
     // ,m_Texture(new Texture(GL_TEXTURE0))
     // ,m_Video(cv::VideoCapture(0))
+#ifdef _REALSENSE
     ,m_Align(RS2_STREAM_COLOR)
-    // ,m_ShaderDesc({
-    //     "SpriteShader",
-    //     {
-    //     std::string(SHADER_PATH) + "sprite.vert",
-    //     std::string(SHADER_PATH) + "sprite.frag"
-    //     },
-    //     Shader::ShaderDesc::VERTEX_FRAGMENT
-    // })
+#endif
 {
 #ifdef _REALSENSE
-    // m_Align = rs2::align(RS2_STREAM_COLOR);
     rs2::pipeline_profile profile = m_Pipe.start();
 #else
     m_Video = cv::VideoCapture(0);
@@ -58,27 +51,4 @@ void VideoComponent::Update()
     m_Texture->Update(m_CurrentFrame);   // 取得したフレームに合わせてtextureを更新
 }
 
-// void VideoComponent::Draw()
-// {
-// 	float screenWidth = m_Owner->GetManager()->m_Renderer->GetScreenSize().x;
-// 	float screenHeight = m_Owner->GetManager()->m_Renderer->GetScreenSize().y;
-// 	glm::mat4 spriteViewProj = glm::mat4({
-//         { 2.0f/screenWidth, 0.0f, 0.0f, 0.0f },
-//         { 0.0f, 2.0f/screenHeight, 0.0f, 0.0f },
-//         { 0.0f, 0.0f, 1.0f, 0.0f },
-//         { 0.0f, 0.0f, 1.0f, 1.0f }
-//     });
-
-//     Shader* shader = m_Owner->GetManager()->m_Renderer->GetShader(m_ShaderDesc);
-//     shader->UseProgram();
-
-//     shader->SetMatrixUniform("ModelTransform", m_Owner->GetWorldTransform());
-//     shader->SetMatrixUniform("SpriteViewProj", spriteViewProj);
-
-//     // VertexArray* vao = mMesh->GetVertexArray();
-//     mVAO->SetActive();
-//     m_Texture->BindTexture();
-//     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-//     m_Texture->UnBindTexture();
-// }
 

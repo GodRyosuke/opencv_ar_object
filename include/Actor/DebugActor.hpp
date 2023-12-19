@@ -7,7 +7,7 @@ class DebugActor : public Actor {
 public:
     DebugActor(class Manager* manager);
     void ActorInput(GLFWwindow* window) override;
-    void UpdateActor() override;
+    // void UpdateActor() override;
 
 private:
     void UpdateCameraOrientation(glm::vec2 mousePos);

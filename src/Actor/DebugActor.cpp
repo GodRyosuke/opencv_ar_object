@@ -19,22 +19,6 @@ DebugActor::DebugActor(Manager* manager)
     ,m_IsFirstClick(true)
 {
     SetPosition(glm::vec3(-1.0f, 2.5f, 1.0f));
-
-    // shader
-    // Shader::ShaderDesc desc({
-    //     "SpriteShader",
-    //     {
-    //     std::string(SHADER_PATH) + "mesh.vert",
-    //     std::string(SHADER_PATH) + "unitychan.frag"
-    //     },
-    //     Shader::ShaderDesc::VERTEX_FRAGMENT
-    // });
-    // // mesh
-    // m_MeshComp = new MeshComponent(
-    //     this,
-    //     std::string(ASSET_PATH) + "unitychan/unitychan.fbx",
-    //     m_Manager->m_Renderer->GetShader(desc)
-    // );
 }
 
 void DebugActor::ActorInput(GLFWwindow* window)
@@ -45,10 +29,6 @@ void DebugActor::ActorInput(GLFWwindow* window)
         // 前へ進む
         cameraPos += keyMoveSpeed * m_CameraOrientation;
     }
-    // if (event.key == GLFW_KEY_W && event.action == GLFW_PRESS) {
-    //     // 前へ進む
-    //     cameraPos += keyMoveSpeed * m_CameraOrientation;
-    // }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         // 後ろへ下がる
         cameraPos -= keyMoveSpeed * m_CameraOrientation;
@@ -65,7 +45,6 @@ void DebugActor::ActorInput(GLFWwindow* window)
 
     // カメラの向きを更新
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-    // if (event.key == GLFW_MOUSE_BUTTON_LEFT && event.action == GLFW_PRESS) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
         // 初回クリック時はカーソルを中央に移動
@@ -80,7 +59,6 @@ void DebugActor::ActorInput(GLFWwindow* window)
         UpdateCameraOrientation(glm::vec2(mouseX, mouseY));
         // カーソル位置を画面中央に戻す
         glfwSetCursorPos(window, screenSize.x / 2.f, screenSize.y / 2.f);
-    // } else if (event.key == GLFW_MOUSE_BUTTON_LEFT && event.action == GLFW_RELEASE) {
     } else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         m_IsFirstClick = true;
@@ -124,18 +102,4 @@ void DebugActor::UpdateCameraOrientation(glm::vec2 mousePos)
 
     // 左右方向の更新
     m_CameraOrientation = glm::rotate<float>(m_CameraOrientation, glm::radians(-rotY), m_CameraUp);
-}
-
-void DebugActor::UpdateActor()
-{
-    // const double fov = 45; // degree
-    // const double nearP = 0.1f;
-    // const double farP = 200;
-    // glm::mat4 camView = glm::lookAt(GetPosition(), GetPosition() + m_CameraOrientation, m_CameraUp);
-    // glm::vec2 screenSize = GetManager()->GetScreenSize();
-    // glm::mat4 camProj = glm::perspective<float>(glm::radians(fov), screenSize.x / screenSize.y, nearP, farP);
-    // GetManager()->m_Renderer->AllShaderProcess([this, camView, camProj](Shader* shader) {
-    //     shader->SetMatrixUniform("CameraView", camView);
-    //     shader->SetMatrixUniform("CameraProj", camProj);
-    // });
 }

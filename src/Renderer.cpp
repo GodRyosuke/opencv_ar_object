@@ -93,32 +93,6 @@ void Renderer::Draw()
     for (auto drawer : m_Drawers) {
         drawer->Draw();
     }
-    
-    
-    
-    // glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // for (auto sk : m_SkinMeshComps) {
-    //     sk->Draw();
-    // }
-    // for (auto mc : m_MeshComps) {
-    //     mc->Draw();
-    // }
-
-	// // Draw Sprites
-	// glDisable(GL_DEPTH_TEST);
-	// // Enable alpha blending on the color buffer
-	// glEnable(GL_BLEND);
-	// glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-	// glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
-
-	// // mSpriteShader->UseProgram();
-	// for (auto sprite : m_SpriteComps) {
-	// 	sprite->Draw();
-	// }
-
 }
 
 Shader* Renderer::GetShader(const Shader::ShaderDesc& shaderDesc)
@@ -161,16 +135,6 @@ void Renderer::SpecificShaderProcess(std::string shaderName, std::function<void(
     }
     f(iter->second);
 }
-
-// std::vector<std::function<void(GLFWwindow*, int, int, int, int)>> Renderer::m_KeyCallbacks;
-// void Renderer::MainKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-// {
-//     Util::Print("dlfkaj\n");
-    
-//     for (auto callback : m_KeyCallbacks) {
-//         callback(window,key, scancode, action, mods);
-//     }
-// }
 
 Mesh* Renderer::GetMesh(const std::string fileName, bool isSkeletal)
 {

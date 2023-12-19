@@ -12,7 +12,7 @@ TestSprite::TestSprite(Manager* manager)
     ,m_imageRatio(0.7)
 {
     Texture* tex = new Texture();
-    tex->Load(std::string(ASSET_PATH) + "socket_img.jpg");
+    tex->Load(std::string(ASSET_PATH) + "ArMarker.png");
     // Texture* tex = new Texture(std::string(ASSET_PATH) + "socket_img.jpg", GL_TEXTURE0);
     m_SpriteComp = new SpriteComponent(this, tex);
 

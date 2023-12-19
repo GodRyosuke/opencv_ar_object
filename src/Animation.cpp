@@ -293,62 +293,10 @@ void Animation::GetGlobalPoseAtTime(std::vector<glm::mat4>& outPoses, const Skel
         outPoses.resize(numBones);
     }
 
-    //float TicksPerSecond = (float)(m_pScene->mAnimations[animIdx]->mTicksPerSecond != NULL ? m_pScene->mAnimations[animIdx]->mTicksPerSecond : 25.0f);
-    //float TimeInTicks = inTime * TicksPerSecond;
-    //float AnimationTimeTicks = fmod(TimeInTicks, GetDuration(animIdx));
-    //float TicksPerSecond = (float)(m_pScene->mAnimations[0]->mTicksPerSecond != NULL ? m_pScene->mAnimations[0]->mTicksPerSecond : 25.0f);
-    //float TimeInTicks = inTime * TicksPerSecond;
-    //float Duration = 0.0f;  // AnimationのDurationの整数部分が入る
-    //float fraction = modf((float)m_pScene->mAnimations[0]->mDuration, &Duration);
-    //float AnimationTimeTicks = fmod(TimeInTicks, Duration);
-
-
     glm::mat4 Identity = glm::mat4(1);
     // Nodeの階層構造にしたがって、AnimationTicks時刻における各BoneのTransformを求める
     aiAnimation* anim = m_pScene->mAnimations[animIdx];
     ReadNodeHierarchy(anim, inSkeleton, inTime, m_pScene->mRootNode, Identity, outPoses);
-    //ShowNodeNames(m_pScene->mRootNode, 0);
-    //Transforms.resize(numBones);
-
-    //for (unsigned int i = 0; i < numBones; i++) {
-    //    outPoses[i] = m_BoneInfo[i].FinalTransformation;
-    //}
-
-
-    // Figure out the current frame index and next frame
-    // (This assumes inTime is bounded by [0, AnimDuration]
-    //size_t frame = static_cast<size_t>(inTime / mFrameDuration);
-    //size_t nextFrame = frame + 1;
-    //// Calculate fractional value between frame and next frame
-    //float pct = inTime / mFrameDuration - frame;
-
-    //// Setup the pose for the root
-    //if (mTracks[0].size() > 0)
-    //{
-    //    // Interpolate between the current frame's pose and the next frame
-    //    BoneTransform interp = BoneTransform::Interpolate(mTracks[0][frame],
-    //        mTracks[0][nextFrame], pct);
-    //    outPoses[0] = interp.ToMatrix();
-    //}
-    //else
-    //{
-    //    outPoses[0] = Matrix4::Identity;
-    //}
-
-    //const std::vector<Skeleton::Bone>& bones = mSkinMesh->GetBones();
-    //// Now setup the poses for the rest
-    //for (size_t bone = 1; bone < numBones; bone++)
-    //{
-    //    Matrix4 localMat; // (Defaults to identity)
-    //    if (mTracks[bone].size() > 0)
-    //    {
-    //        BoneTransform interp = BoneTransform::Interpolate(mTracks[bone][frame],
-    //            mTracks[bone][nextFrame], pct);
-    //        localMat = interp.ToMatrix();
-    //    }
-
-    //    outPoses[bone] = localMat * outPoses[bones[bone].mParent];
-    //}
 }
 
 //void Animation::Update(float timeInSeconds)

@@ -68,12 +68,6 @@ bool Manager::Init()
         return false;
     }
 
-    // m_Renderer->SetKeyCallback([this](GLFWwindow* window, int key, int scancode, int action, int mods)->void {
-    //     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-    //         this->m_IsRun = false;
-    //     }
-    // });
-
     // Load Actors
     Actor* a = nullptr;
     bool showOpenGLWorld = false;

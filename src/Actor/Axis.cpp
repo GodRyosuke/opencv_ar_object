@@ -17,8 +17,6 @@ Axis::Axis(Manager* manager, std::string name)
         {
         std::string(SHADER_PATH) + "mesh.vert",
         std::string(SHADER_PATH) + "axis.frag"
-        // std::string(SHADER_PATH) + "mesh.vert",
-        // std::string(SHADER_PATH) + "unitychan.frag"
         },
         Shader::ShaderDesc::VERTEX_FRAGMENT
     });
