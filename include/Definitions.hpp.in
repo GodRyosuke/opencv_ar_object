@@ -1,3 +1,7 @@
 #define ASSET_PATH "@ASSET_PATH@"
 #define SHADER_PATH "@SHADER_PATH@"
 #define BUILD_PATH "@BUILD_PATH@"
+#define PLATFORM_TYPE "@PLATFORM_TYPE@"
+// #define PROJECT_BUILD_TYPE "@PROJECT_BUILD_TYPE@"
+// #cmakedefine _DEBUG
+#cmakedefine _REALSENSE

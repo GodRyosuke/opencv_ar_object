@@ -25,6 +25,14 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     endif()
 endif()
 
+# if(MSVC)
+#     set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   /DBUILD_TYPE=\\\"Debug\\\"")
+#     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /DBUILD_TYPE=\\\"Release\\\"")
+# else()
+#     set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -DBUILD_TYPE=\\\"Debug\\\"")
+#     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DBUILD_TYPE=\\\"Release\\\"")
+# endif()
+
 # third party libraries
 if (MSVC)
     set (glfw3_DIR "${PROJECT_SOURCE_DIR}/dependencies/glfw/lib/cmake/glfw3")
@@ -45,11 +53,26 @@ find_package(assimp CONFIG REQUIRED)
 #glad
 add_library(glad src/glad.c)
 target_include_directories(glad PUBLIC ${PROJECT_SOURCE_DIR}/include)
+#realsense
+option(USE_REALSENSE "if you want to use other camera" ON)
+if (USE_REALSENSE)
+    find_package(realsense2 CONFIG REQUIRED)
+endif()
 
 # cmake configurations
 set (BUILD_PATH "${PROJECT_SOURCE_DIR}/build")
 set (ASSET_PATH "${PROJECT_SOURCE_DIR}/assets/")
 set (SHADER_PATH "${PROJECT_SOURCE_DIR}/shaders/")
+set (PLATFORM_TYPE ${CEF_PLATFORM})
+set (PROJECT_BUILD_TYPE ${CMAKE_BUILD_TYPE})
+if (USE_REALSENSE)
+    set(_REALSENSE 1)
+endif()
+# string(REGEX MATCH "(?i)debug(?-i)" IS_DEBUG ${CMAKE_BUILD_TYPE})
+# if ((NOT MSVC) AND (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
+# # if ((NOT MSVC) AND (DFINED ${IS_DEBUG}))
+#     set (_DEBUG 1)
+# endif()
 configure_file(
     ${PROJECT_SOURCE_DIR}/include/Definitions.hpp.in 
     ${PROJECT_SOURCE_DIR}/include/Definitions.hpp

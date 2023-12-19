@@ -1,5 +1,8 @@
 # ChARUcoを使ったARサンプル
 マーカー上に3Dモデルを表示する
+使用したマーカーはこちらです。
+
+デフォルトでは、Realsenseを使用することになっているので、PCカメラを使う場合はcmake configuration時で、USE_REALSENSE=OFFとしておいてください。
 
 # Windows
 ## Installation
