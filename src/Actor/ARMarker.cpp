@@ -42,7 +42,6 @@ void ARMarker::UpdateActor()
     if (currentFrame.rows == 0) {
         return;
     }
-
     // 検出したARマーカー情報を追記
     cv::Mat detected_img = currentFrame;
     std::vector<std::vector<cv::Point2f>> corners, rejectedCandidates;
