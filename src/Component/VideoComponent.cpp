@@ -11,7 +11,8 @@
 VideoComponent::VideoComponent(Actor* owner)
     :SpriteComponent(owner, new Texture(GL_TEXTURE0))
     // ,m_Texture(new Texture(GL_TEXTURE0))
-    ,m_Video(cv::VideoCapture(0))
+    // ,m_Video(cv::VideoCapture(0))
+    ,m_Align(RS2_STREAM_COLOR)
     // ,m_ShaderDesc({
     //     "SpriteShader",
     //     {
@@ -21,25 +22,12 @@ VideoComponent::VideoComponent(Actor* owner)
     //     Shader::ShaderDesc::VERTEX_FRAGMENT
     // })
 {
-   	// std::vector<glm::vec3> vertices = {
-	// 	glm::vec3(-0.5f, 0.5f, 0.f), // top left
-	// 	glm::vec3(0.5f, 0.5f, 0.f),  // top right
-	// 	glm::vec3(0.5f,-0.5f, 0.f),  // bottom right
-	// 	glm::vec3(-0.5f,-0.5f, 0.f)  //bottom left
-	// };
-   	// std::vector<glm::vec2> texcoords = {
-	// 	glm::vec2(0.f, 1.f),  // bottom left
-	// 	glm::vec2(1.f, 1.f), // bottom right
-    //     glm::vec2(1.f, 0.f), // top right
-    //     glm::vec2(0.f, 0.f) // top left
-	// };
-	// std::vector<unsigned int> indices = {
-	// 	0, 1, 2,
-	// 	2, 3, 0
-	// };
-    // mVAO = new VertexArray(vertices, texcoords, indices);
-
-    // owner->GetManager()->m_Renderer->AddSpriteComp(this);
+#ifdef _REALSENSE
+    // m_Align = rs2::align(RS2_STREAM_COLOR);
+    rs2::pipeline_profile profile = m_Pipe.start();
+#else
+    m_Video = cv::VideoCapture(0);
+#endif
 }
 
 VideoComponent::~VideoComponent()
@@ -50,7 +38,23 @@ VideoComponent::~VideoComponent()
 void VideoComponent::Update()
 {
     // 最新のフレームを取得
+#ifdef _REALSENSE
+    rs2::frameset data 
+        = m_Pipe.wait_for_frames().    // Wait for next set of frames from the camera
+        apply_filter(m_Printer).     // Print each enabled stream frame rate
+        apply_filter(m_ColorMap);   // Fi
+    
+    auto aligned_frames = m_Align.process(data);
+    rs2::video_frame color_frame = aligned_frames.first(RS2_STREAM_COLOR);
+    // rs2::video_frame depth_frame = aligned_frames.get_depth_frame().apply_filter(m_ColorMap);
+
+    const int img_width = 640;
+    const int img_height = 480;
+    m_CurrentFrame = cv::Mat(cv::Size(img_width, img_height), CV_8UC3, (void*)color_frame.get_data(), cv::Mat::AUTO_STEP);
+    cv::cvtColor(m_CurrentFrame, m_CurrentFrame, cv::COLOR_RGB2BGR);
+#else
     m_Video.read(m_CurrentFrame);
+#endif
     m_Texture->Update(m_CurrentFrame);   // 取得したフレームに合わせてtextureを更新
 }
 

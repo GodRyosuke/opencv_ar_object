@@ -6,6 +6,11 @@
 #include "glad/glad.h"
 #include <opencv2/opencv.hpp>
 
+#include "Definitions.hpp"
+#ifdef _REALSENSE
+#include <librealsense2/rs.hpp>
+#endif
+
 #include "Shader.hpp"
 
 class VideoComponent : public SpriteComponent {
@@ -27,6 +32,11 @@ private:
     // const Shader::ShaderDesc m_ShaderDesc;
     cv::VideoCapture m_Video;
     cv::Mat m_CurrentFrame;
-
+#ifdef _REALSENSE
+    rs2::colorizer m_ColorMap;
+    rs2::rates_printer m_Printer;
+    rs2::pipeline m_Pipe;
+    rs2::align m_Align;
+#endif
     // glm::mat4 mSpriteViewProj;
 };

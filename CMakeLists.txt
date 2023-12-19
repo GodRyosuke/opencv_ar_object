@@ -53,8 +53,11 @@ find_package(assimp CONFIG REQUIRED)
 #glad
 add_library(glad src/glad.c)
 target_include_directories(glad PUBLIC ${PROJECT_SOURCE_DIR}/include)
-# glm
-# set (GLM_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/dependencies/glm)
+#realsense
+option(USE_REALSENSE "if you want to use other camera" ON)
+if (USE_REALSENSE)
+    find_package(realsense2 CONFIG REQUIRED)
+endif()
 
 # cmake configurations
 set (BUILD_PATH "${PROJECT_SOURCE_DIR}/build")
@@ -62,6 +65,9 @@ set (ASSET_PATH "${PROJECT_SOURCE_DIR}/assets/")
 set (SHADER_PATH "${PROJECT_SOURCE_DIR}/shaders/")
 set (PLATFORM_TYPE ${CEF_PLATFORM})
 set (PROJECT_BUILD_TYPE ${CMAKE_BUILD_TYPE})
+if (USE_REALSENSE)
+    set(_REALSENSE 1)
+endif()
 # string(REGEX MATCH "(?i)debug(?-i)" IS_DEBUG ${CMAKE_BUILD_TYPE})
 # if ((NOT MSVC) AND (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
 # # if ((NOT MSVC) AND (DFINED ${IS_DEBUG}))

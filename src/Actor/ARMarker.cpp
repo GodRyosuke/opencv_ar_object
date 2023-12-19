@@ -39,6 +39,9 @@ void ARMarker::UpdateActor()
     // 最新の動画フレームを取得する
     const Capture* capture = static_cast<const Capture*>(m_Manager->GetActor("Capture"));
     cv::Mat currentFrame = capture->GetCurrentFrame();
+    if (currentFrame.rows == 0) {
+        return;
+    }
 
     // 検出したARマーカー情報を追記
     cv::Mat detected_img = currentFrame;
@@ -47,8 +50,15 @@ void ARMarker::UpdateActor()
     cv::Ptr<cv::aruco::DetectorParameters> params = cv::aruco::DetectorParameters::create();
     cv::aruco::detectMarkers(currentFrame, m_dictionary, corners, ids, params, rejectedCandidates);
 
+#ifdef _REALSENSE
+    // realsense d435f内部パラメータ
+    cv::Mat cameraMat = (cv::Mat_<double>(3,3) << 1362.086753996991, 0, 959.5, 0, 1364.712560504054, 539.5, 0, 0, 1);
+    cv::Mat distCoeffs = (cv::Mat_<double>(1,5) << 0.1406400877743553, -0.4505503566180014, 0, 0, 0.4179603222152956);
+#else
+    // pcカメラ
     cv::Mat cameraMat = (cv::Mat_<double>(3,3) << 852.8839555848483, 0, 639.5, 0, 852.215118770151, 359.5, 0, 0, 1);
     cv::Mat distCoeffs = (cv::Mat_<double>(1,5) << 0.08005910250868746, -0.3113160415419927, 0, 0, 0.196456176823346);
+#endif
     std::vector<cv::Vec3d> marker_rots;
     std::vector<cv::Vec3d> marker_trans;
 
