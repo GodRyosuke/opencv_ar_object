@@ -1,6 +1,6 @@
-# ChARUcoを使ったARサンプル
+# マーカーの上にUnityChanを表示する
 マーカー上に3Dモデルを表示する
-使用したマーカーはこちらです。
+使用したマーカーは[こちら](https://github.com/GodRyosuke/opencv_ar_object/blob/master/assets/ArMarker.png)です。
 
 デフォルトでは、Realsenseを使用することになっているので、PCカメラを使う場合はcmake configuration時で、USE_REALSENSE=OFFとしておいてください。
 
